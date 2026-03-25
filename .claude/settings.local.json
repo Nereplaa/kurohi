@@ -1,0 +1,47 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pip --version)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\app\\\\api\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\alembic\")",
+      "Bash(python -m venv venv)",
+      "Bash(venvScriptspip install:*)",
+      "Bash(venv/Scripts/pip install:*)",
+      "Bash(venv/Scripts/alembic init:*)",
+      "Bash(venv/Scripts/python -c \"from app.models import *; print\\(''models.py OK''\\)\")",
+      "Bash(venv/Scripts/pip show:*)",
+      "Bash(venv/Scripts/python -c \"from app.main import app; print\\(''main.py OK''\\)\")",
+      "Bash(npm --version)",
+      "Bash(cmd /c \"node --version && npm --version\" 2>&1)",
+      "Bash(powershell -Command \"node --version; npm --version; npx --version\" 2>&1)",
+      "Bash(powershell -Command \"& node --version; npm --version\" 2>&1)",
+      "Bash(powershell -Command \"\n$paths = @\\('C:\\\\Program Files\\\\nodejs', 'C:\\\\Program Files \\(x86\\)\\\\nodejs', \\\\\"$env:APPDATA\\\\npm\\\\\", \\\\\"$env:LOCALAPPDATA\\\\Programs\\\\nodejs\\\\\"\\)\nforeach \\($p in $paths\\) { if \\(Test-Path $p\\) { Write-Host \\\\\"Found: $p\\\\\" } }\n\" 2>&1)",
+      "Bash(powershell -Command \"Test-Path 'C:\\\\Program Files\\\\nodejs\\\\node.exe'\" 2>&1)",
+      "Bash(powershell -Command \"& 'C:\\\\Program Files\\\\nodejs\\\\node.exe' --version; & 'C:\\\\Program Files\\\\nodejs\\\\npm.cmd' --version\" 2>&1)",
+      "Bash(powershell -Command \"& ''C:\\\\Program Files\\\\nodejs\\\\npx.cmd'' create-next-app@latest frontend --typescript --tailwind --eslint --app --no-src-dir --import-alias ''@/*'' --no-git 2>&1\")",
+      "Bash(cmd /c \"set PATH=C:\\\\Program Files\\\\nodejs;%PATH% && echo N | npx create-next-app@latest frontend --typescript --tailwind --eslint --app --no-src-dir --import-alias @/* --no-git --yes\")",
+      "Bash(powershell -Command \"Test-Path 'C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\package.json'\" 2>&1)",
+      "Bash(cmd /c \"set PATH=C:\\\\Program Files\\\\nodejs;%PATH% && npx --yes create-next-app@latest frontend --typescript --tailwind --eslint --app --no-src-dir --import-alias @/* --no-git\")",
+      "Bash(cmd /c \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\create_frontend.bat\" 2>&1)",
+      "Bash(cmd /c \"set PATH=C:\\\\Program Files\\\\nodejs;%PATH% && \\(echo. && echo.\\) | npx create-next-app@latest frontend --typescript --tailwind --eslint --app --no-src-dir --import-alias @/* --no-git\" 2>&1)",
+      "Bash(cmd /c \"set PATH=C:\\\\Program Files\\\\nodejs;%PATH% && npm install\")",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" install)",
+      "Bash(cmd /c \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\install.bat\" 2>&1)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\install.ps1\" 2>&1)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\update.ps1\" 2>&1)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\build.ps1\" 2>&1)",
+      "Bash(powershell.exe -File \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\\\\frontend\\\\build.ps1\" 2>&1)",
+      "Bash(dir /b \"C:\\\\Users\\\\Alperen\\\\Desktop\\\\deneme\")",
+      "Bash(npx create-next-app@latest frontend --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(./venv/Scripts/pip.exe install:*)",
+      "Bash(./venv/Scripts/alembic.exe revision:*)",
+      "Bash(./venv/Scripts/python.exe -c \"from alembic.util import rev_id; print\\(rev_id\\(\\)\\)\")",
+      "Bash(./venv/Scripts/python.exe -c \":*)",
+      "Bash(npx next:*)",
+      "Bash(PYTHONPATH=. \"../venv/Scripts/python.exe\" -c \":*)"
+    ]
+  }
+}
