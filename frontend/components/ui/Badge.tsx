@@ -8,7 +8,7 @@ interface BadgeProps {
 
 export function Badge({ children, variant = "default", className }: BadgeProps) {
   const variants = {
-    default: "bg-anime-bg-surface text-anime-text-secondary",
+    default: "bg-anime-bg-surface text-muted",
     genre: "bg-anime-cyan/15 text-anime-cyan",
     premium: "bg-anime-gold/20 text-anime-gold",
     status: "bg-anime-success/15 text-anime-success",

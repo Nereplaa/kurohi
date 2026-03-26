@@ -56,6 +56,101 @@
   scrollbar-color: #C8CCE0 #E4E6F2;
 }
 
+/* ── Banner CSS variables ──────────────────────────────────────────────── */
+:root {
+  --banner-bg:             linear-gradient(135deg, #0d0d1a 0%, #12122a 60%, #0f0f1e 100%);
+  --banner-title:          rgba(255,255,255,0.95);
+  --banner-desc:           rgba(255,255,255,0.55);
+  --banner-meta:           rgba(255,255,255,0.45);
+  --banner-age-bg:         rgba(255,255,255,0.07);
+  --banner-age-border:     rgba(255,255,255,0.15);
+  --banner-age-fg:         rgba(255,255,255,0.55);
+  --banner-ghost-border:   rgba(255,255,255,0.20);
+  --banner-ghost-fg:       rgba(255,255,255,0.80);
+  --banner-ghost-hover-bg: rgba(255,255,255,0.08);
+  --banner-dot:            rgba(255,255,255,0.22);
+  --banner-dot-counter:    rgba(255,255,255,0.28);
+  --banner-poster-shadow:  drop-shadow(0 0 28px rgba(108,92,231,0.45)) drop-shadow(0 8px 20px rgba(0,0,0,0.70));
+
+  --modal-scrim-bg:        rgba(4,4,18,0.72);
+  --modal-scrim-filter:    blur(10px) saturate(0.70);
+  --modal-card-bg:         rgba(11,11,26,0.97);
+  --modal-card-border:     rgba(255,255,255,0.08);
+  --modal-card-ring:       rgba(108,92,231,0.18);
+  --modal-card-shadow:     0 24px 80px rgba(0,0,0,0.80), 0 8px 32px rgba(108,92,231,0.12);
+  --modal-label:           rgba(255,255,255,0.30);
+  --modal-heading:         rgba(255,255,255,0.92);
+  --modal-meta:            rgba(255,255,255,0.40);
+  --modal-body:            rgba(255,255,255,0.80);
+  --modal-divider:         rgba(255,255,255,0.06);
+  --modal-badge-border:    rgba(255,255,255,0.12);
+  --modal-badge-fg:        rgba(255,255,255,0.45);
+  --modal-ghost-border:    rgba(255,255,255,0.15);
+  --modal-ghost-fg:        rgba(255,255,255,0.70);
+  --modal-ghost-hover-fg:  rgba(255,255,255,0.95);
+  --modal-ghost-hover-bd:  rgba(108,92,231,0.45);
+}
+
+[data-theme="light"] {
+  /* Noticeably darker than page bg (#F0F2F8) so banner reads as a distinct section */
+  --banner-bg:             linear-gradient(135deg, #bdc5de 0%, #c8d0ea 60%, #c2cae2 100%);
+  --banner-title:          rgba(10,10,30,0.92);
+  --banner-desc:           rgba(20,20,55,0.58);
+  --banner-meta:           rgba(20,20,55,0.46);
+  --banner-age-bg:         rgba(15,15,40,0.06);
+  --banner-age-border:     rgba(15,15,40,0.14);
+  --banner-age-fg:         rgba(15,15,40,0.50);
+  --banner-ghost-border:   rgba(15,15,40,0.18);
+  --banner-ghost-fg:       rgba(10,10,30,0.72);
+  --banner-ghost-hover-bg: rgba(15,15,40,0.07);
+  --banner-dot:            rgba(10,10,30,0.20);
+  --banner-dot-counter:    rgba(10,10,30,0.30);
+  --banner-poster-shadow:  drop-shadow(0 0 20px rgba(108,92,231,0.22)) drop-shadow(0 6px 18px rgba(0,0,0,0.18));
+
+  --modal-scrim-bg:        rgba(185,190,220,0.60);
+  --modal-scrim-filter:    blur(12px) saturate(0.85);
+  --modal-card-bg:         rgba(252,253,255,0.98);
+  --modal-card-border:     rgba(0,0,0,0.07);
+  --modal-card-ring:       rgba(108,92,231,0.12);
+  --modal-card-shadow:     0 24px 80px rgba(0,0,0,0.18), 0 8px 32px rgba(108,92,231,0.08);
+  --modal-label:           rgba(15,15,40,0.38);
+  --modal-heading:         rgba(10,10,30,0.90);
+  --modal-meta:            rgba(15,15,40,0.48);
+  --modal-body:            rgba(10,10,30,0.78);
+  --modal-divider:         rgba(0,0,0,0.07);
+  --modal-badge-border:    rgba(0,0,0,0.12);
+  --modal-badge-fg:        rgba(10,10,30,0.50);
+  --modal-ghost-border:    rgba(15,15,40,0.18);
+  --modal-ghost-fg:        rgba(10,10,30,0.65);
+  --modal-ghost-hover-fg:  rgba(10,10,30,0.95);
+  --modal-ghost-hover-bd:  rgba(108,92,231,0.45);
+}
+
+/* ── Banner utility classes ────────────────────────────────────────────── */
+.banner-ghost {
+  color: var(--banner-ghost-fg);
+  border-color: var(--banner-ghost-border);
+}
+.banner-ghost:hover {
+  color: var(--banner-title);
+  border-color: rgba(108,92,231,0.45);
+  background-color: var(--banner-ghost-hover-bg);
+}
+.banner-dot-inactive            { background-color: var(--banner-dot); }
+.banner-dot-inactive:hover      { opacity: 0.7; }
+
+/* ── Modal utility classes ─────────────────────────────────────────────── */
+.modal-ghost-btn {
+  color: var(--modal-ghost-fg);
+  border-color: var(--modal-ghost-border);
+}
+.modal-ghost-btn:hover {
+  color: var(--modal-ghost-hover-fg);
+  border-color: var(--modal-ghost-hover-bd);
+  background-color: color-mix(in srgb, var(--modal-ghost-border) 60%, transparent);
+}
+
+
 body {
   background-color: var(--background);
   color: var(--foreground);

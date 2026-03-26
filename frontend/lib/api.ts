@@ -221,3 +221,17 @@ export const subscriptionApi = {
   create: (data: { plan_name: string; start_date: string; end_date: string }) =>
     api.post<Subscription>("/api/subscriptions/", data).then((r) => r.data),
 };
+
+// ── Payments ───────────────────────────────────────────────────────────────
+
+import type { CheckoutResponse, InitiateResponse } from "@/types";
+
+export const paymentApi = {
+  /** Start a checkout form session. Returns token + (in live mode) Iyzico form HTML. */
+  initiate: (plan_name: string) =>
+    api.post<InitiateResponse>("/api/payments/initiate", { plan_name }).then((r) => r.data),
+
+  /** Mock mode only: confirm a pending token and create the subscription directly. */
+  mockConfirm: (token: string) =>
+    api.post<CheckoutResponse>("/api/payments/mock-confirm", { token }).then((r) => r.data),
+};

@@ -10,6 +10,7 @@ from app.models.watch_history import WatchHistory
 from app.models.favorite import Favorite
 from app.models.review import Review, ReviewStatus
 from app.models.subscription import Subscription
+from app.models.pending_checkout import PendingCheckout
 
 __all__ = [
     "Base",
@@ -26,4 +27,5 @@ __all__ = [
     "Review",
     "ReviewStatus",
     "Subscription",
+    "PendingCheckout",
 ]

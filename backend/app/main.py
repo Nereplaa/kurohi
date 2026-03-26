@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import auth, anime, seasons, episodes, users, genres, subscriptions, reviews, admin
+from app.routers import auth, anime, seasons, episodes, users, genres, subscriptions, reviews, admin, payments
 
 app = FastAPI(
     title="Anime Izleme Platformu API",
@@ -28,6 +28,7 @@ app.include_router(users.router, prefix=API_PREFIX)
 app.include_router(subscriptions.router, prefix=API_PREFIX)
 app.include_router(reviews.router, prefix=API_PREFIX)
 app.include_router(admin.router, prefix=API_PREFIX)
+app.include_router(payments.router, prefix=API_PREFIX)
 
 
 @app.get("/", tags=["Health"])

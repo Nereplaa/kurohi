@@ -9,6 +9,7 @@ from app.schemas.watch_history import WatchHistoryUpsert, WatchHistoryOut
 from app.schemas.favorite import FavoriteOut
 from app.schemas.review import ReviewCreate, ReviewUpdate, ReviewOut
 from app.schemas.subscription import SubscriptionCreate, SubscriptionOut
+from app.schemas.payment import InitiateRequest, InitiateResponse, CheckoutResponse
 
 __all__ = [
     "Token", "TokenData",
@@ -22,4 +23,5 @@ __all__ = [
     "FavoriteOut",
     "ReviewCreate", "ReviewUpdate", "ReviewOut",
     "SubscriptionCreate", "SubscriptionOut",
+    "InitiateRequest", "InitiateResponse", "CheckoutResponse",
 ]

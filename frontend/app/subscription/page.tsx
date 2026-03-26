@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Crown, Check, Loader2, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth";
@@ -8,7 +8,8 @@ import { userApi, getErrorMessage } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate } from "@/lib/utils";
-import type { Subscription } from "@/types";
+import { CheckoutModal } from "@/components/CheckoutModal";
+import type { Subscription, CheckoutResponse } from "@/types";
 
 const PLANS = [
   {
@@ -36,12 +37,14 @@ const PLANS = [
   },
 ];
 
-export default function SubscriptionPage() {
+function SubscriptionContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoading } = useAuthStore();
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -49,13 +52,37 @@ export default function SubscriptionPage() {
     }
   }, [user, isLoading, router]);
 
+  // Handle Iyzico callback redirect query params (?payment=success|failed)
   useEffect(() => {
+    const paymentStatus = searchParams.get("payment");
+    if (!paymentStatus) return;
+
+    if (paymentStatus === "success") {
+      const plan = searchParams.get("plan") ?? "";
+      const until = searchParams.get("until") ?? "";
+      toast.success(`${plan} aboneliğiniz başlatıldı! Bitiş: ${until}`);
+    } else if (paymentStatus === "failed") {
+      const reason = searchParams.get("reason") ?? "Bilinmeyen hata";
+      toast.error(`Ödeme başarısız: ${reason}`);
+    }
+
+    // Clean up query params without a full reload
+    router.replace("/subscription", { scroll: false });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchSubscriptions = () => {
     if (!user) return;
     userApi
       .getSubscriptions()
       .then(setSubscriptions)
       .catch((err) => toast.error(getErrorMessage(err)))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchSubscriptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const activeSub = subscriptions.find((s) => new Date(s.end_date) > new Date());
@@ -172,9 +199,7 @@ export default function SubscriptionPage() {
                 variant={plan.highlighted ? "primary" : "ghost"}
                 size="lg"
                 className="w-full"
-                onClick={() =>
-                  toast.info("Odeme sistemi henuz aktif degil. Yonetici tarafindan abonelik atanabilir.")
-                }
+                onClick={() => setSelectedPlan(plan)}
               >
                 Abone Ol
               </Button>
@@ -185,9 +210,39 @@ export default function SubscriptionPage() {
 
       {/* Info */}
       <div className="text-center text-dim text-xs space-y-1">
-        <p>Abonelik yoneticiniz tarafindan atanir.</p>
         <p>Sorulariniz icin destek ekibi ile iletisime gecin.</p>
       </div>
+
+      {/* Checkout modal */}
+      {selectedPlan && (
+        <CheckoutModal
+          plan={{ name: selectedPlan.name, price: selectedPlan.price, period: selectedPlan.period }}
+          onSuccess={(sub: CheckoutResponse) => {
+            // Mock mode: update state inline (no page reload)
+            const newSub: Subscription = {
+              subscription_id: sub.subscription_id,
+              user_id: sub.user_id,
+              plan_name: sub.plan_name,
+              start_date: sub.start_date,
+              end_date: sub.end_date,
+            };
+            setSubscriptions((prev) => [...prev, newSub]);
+          }}
+          onClose={() => setSelectedPlan(null)}
+        />
+      )}
     </div>
+  );
+}
+
+export default function SubscriptionPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center py-20">
+        <Loader2 className="w-8 h-8 text-crimson animate-spin" />
+      </div>
+    }>
+      <SubscriptionContent />
+    </Suspense>
   );
 }

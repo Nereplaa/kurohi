@@ -98,12 +98,12 @@ export function AnimeCard({ anime, isFavorited = false, onFavoriteChange }: Anim
           )}
 
           {/* Title */}
-          <h3 className="font-heading text-base font-semibold text-anime-text leading-tight line-clamp-2 mb-1">
+          <h3 className="font-heading text-base font-semibold text-fg leading-tight line-clamp-2 mb-1">
             {anime.title}
           </h3>
 
           {/* Meta */}
-          <p className="text-[13px] text-anime-text-secondary">
+          <p className="text-[13px] text-muted">
             {[
               anime.release_year,
               totalEps > 0 ? `${totalEps} Bolum` : null,

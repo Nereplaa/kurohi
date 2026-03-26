@@ -124,6 +124,22 @@ export interface Subscription {
   end_date: string;
 }
 
+// ---- Payment ----
+export interface InitiateResponse {
+  token: string;
+  mock_mode: boolean;
+  checkout_form_content: string | null;
+}
+
+export interface CheckoutResponse {
+  subscription_id: number;
+  user_id: number;
+  plan_name: string;
+  start_date: string;
+  end_date: string;
+  payment_id: string;
+}
+
 // ---- API Error ----
 export interface ApiError {
   detail: string;
