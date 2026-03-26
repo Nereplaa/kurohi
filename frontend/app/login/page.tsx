@@ -44,8 +44,8 @@ export default function LoginPage() {
               <Film className="w-6 h-6 text-crimson" />
             </div>
           </div>
-          <h1 className="font-heading text-3xl font-bold text-[#F0F0F5]">Hos Geldin</h1>
-          <p className="text-[#8A8AA8] mt-1">Hesabina giris yap</p>
+          <h1 className="font-heading text-3xl font-bold text-fg">Hos Geldin</h1>
+          <p className="text-muted mt-1">Hesabina giris yap</p>
         </div>
 
         <div className="bg-midnight border border-border rounded-2xl p-8 space-y-5">
@@ -69,7 +69,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#8A8AA8]">
+          <p className="text-center text-sm text-muted">
             Hesabin yok mu?{" "}
             <Link href="/register" className="text-crimson hover:text-red-400 font-medium transition-colors">
               Kayit Ol

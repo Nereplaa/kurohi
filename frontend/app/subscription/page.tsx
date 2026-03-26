@@ -75,8 +75,8 @@ export default function SubscriptionPage() {
         <div className="w-14 h-14 rounded-2xl bg-violet/10 border border-violet/30 flex items-center justify-center mx-auto">
           <Crown className="w-7 h-7 text-violet" />
         </div>
-        <h1 className="font-heading text-3xl font-bold text-[#F0F0F5]">Premium Abonelik</h1>
-        <p className="text-[#8A8AA8] max-w-md mx-auto">
+        <h1 className="font-heading text-3xl font-bold text-fg">Premium Abonelik</h1>
+        <p className="text-muted max-w-md mx-auto">
           Premium uyelik ile tum bolumlere sinirsiz erisim saglayin.
         </p>
       </div>
@@ -91,23 +91,23 @@ export default function SubscriptionPage() {
           <div className="flex items-center gap-3">
             <Shield className="w-6 h-6 text-violet" />
             <div>
-              <h2 className="font-heading text-xl font-bold text-[#F0F0F5]">Aktif Abonelik</h2>
-              <p className="text-[#8A8AA8] text-sm">Su an premium uyesiniz</p>
+              <h2 className="font-heading text-xl font-bold text-fg">Aktif Abonelik</h2>
+              <p className="text-muted text-sm">Su an premium uyesiniz</p>
             </div>
             <Badge variant="premium" className="ml-auto">Aktif</Badge>
           </div>
           <div className="grid grid-cols-3 gap-4 pt-2">
             <div>
-              <p className="text-xs text-[#4A4A6A] uppercase tracking-wider">Plan</p>
-              <p className="text-[#F0F0F5] font-medium">{activeSub.plan_name}</p>
+              <p className="text-xs text-dim uppercase tracking-wider">Plan</p>
+              <p className="text-fg font-medium">{activeSub.plan_name}</p>
             </div>
             <div>
-              <p className="text-xs text-[#4A4A6A] uppercase tracking-wider">Baslangic</p>
-              <p className="text-[#F0F0F5] font-medium">{formatDate(activeSub.start_date)}</p>
+              <p className="text-xs text-dim uppercase tracking-wider">Baslangic</p>
+              <p className="text-fg font-medium">{formatDate(activeSub.start_date)}</p>
             </div>
             <div>
-              <p className="text-xs text-[#4A4A6A] uppercase tracking-wider">Bitis</p>
-              <p className="text-[#F0F0F5] font-medium">{formatDate(activeSub.end_date)}</p>
+              <p className="text-xs text-dim uppercase tracking-wider">Bitis</p>
+              <p className="text-fg font-medium">{formatDate(activeSub.end_date)}</p>
             </div>
           </div>
         </div>
@@ -116,13 +116,13 @@ export default function SubscriptionPage() {
       {/* Subscription History */}
       {!loading && subscriptions.length > 0 && !activeSub && (
         <div className="bg-midnight border border-border rounded-xl p-5">
-          <h3 className="font-heading text-lg font-semibold text-[#F0F0F5] mb-3">Gecmis Abonelikler</h3>
+          <h3 className="font-heading text-lg font-semibold text-fg mb-3">Gecmis Abonelikler</h3>
           <div className="space-y-2">
             {subscriptions.map((s) => (
               <div key={s.subscription_id} className="flex items-center justify-between bg-obsidian rounded-lg px-4 py-3">
                 <div>
-                  <p className="text-sm text-[#F0F0F5] font-medium">{s.plan_name}</p>
-                  <p className="text-xs text-[#4A4A6A]">
+                  <p className="text-sm text-fg font-medium">{s.plan_name}</p>
+                  <p className="text-xs text-dim">
                     {formatDate(s.start_date)} - {formatDate(s.end_date)}
                   </p>
                 </div>
@@ -152,16 +152,16 @@ export default function SubscriptionPage() {
               )}
 
               <div>
-                <h3 className="font-heading text-xl font-bold text-[#F0F0F5]">{plan.name}</h3>
+                <h3 className="font-heading text-xl font-bold text-fg">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mt-1">
-                  <span className="font-heading text-3xl font-bold text-[#F0F0F5]">{plan.price}</span>
-                  <span className="text-[#4A4A6A] text-sm">{plan.period}</span>
+                  <span className="font-heading text-3xl font-bold text-fg">{plan.price}</span>
+                  <span className="text-dim text-sm">{plan.period}</span>
                 </div>
               </div>
 
               <ul className="space-y-2.5">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-sm text-[#8A8AA8]">
+                  <li key={feature} className="flex items-center gap-2 text-sm text-muted">
                     <Check className="w-4 h-4 text-green-400 shrink-0" />
                     {feature}
                   </li>
@@ -184,7 +184,7 @@ export default function SubscriptionPage() {
       )}
 
       {/* Info */}
-      <div className="text-center text-[#4A4A6A] text-xs space-y-1">
+      <div className="text-center text-dim text-xs space-y-1">
         <p>Abonelik yoneticiniz tarafindan atanir.</p>
         <p>Sorulariniz icin destek ekibi ile iletisime gecin.</p>
       </div>

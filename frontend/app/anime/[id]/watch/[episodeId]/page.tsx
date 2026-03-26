@@ -200,8 +200,8 @@ export default function WatchPage() {
     return (
       <div className="max-w-2xl mx-auto text-center py-20 space-y-4">
         <Lock className="w-12 h-12 text-crimson mx-auto" />
-        <h2 className="font-heading text-2xl font-bold text-[#F0F0F5]">Erisim Engellendi</h2>
-        <p className="text-[#8A8AA8]">{error}</p>
+        <h2 className="font-heading text-2xl font-bold text-fg">Erisim Engellendi</h2>
+        <p className="text-muted">{error}</p>
         <div className="flex justify-center gap-3">
           <Link href={`/anime/${animeId}`}>
             <Button variant="ghost" size="sm">
@@ -235,7 +235,7 @@ export default function WatchPage() {
       {/* Back button */}
       <Link
         href={`/anime/${animeId}`}
-        className="flex items-center gap-2 text-[#8A8AA8] hover:text-[#F0F0F5] transition-colors text-sm"
+        className="flex items-center gap-2 text-muted hover:text-fg transition-colors text-sm"
       >
         <ArrowLeft className="w-4 h-4" /> Anime Detaya Don
       </Link>
@@ -246,7 +246,7 @@ export default function WatchPage() {
           /* Loading Jikan data */
           <div className="w-full aspect-video flex flex-col items-center justify-center bg-midnight gap-3">
             <Loader2 className="w-10 h-10 text-[#6C5CE7] animate-spin" />
-            <p className="text-[#8A8AA8] text-sm">Jikan'dan bölüm verisi yükleniyor...</p>
+            <p className="text-muted text-sm">Jikan'dan bölüm verisi yükleniyor...</p>
           </div>
         ) : youtubeEmbed ? (
           /* YouTube embed — real episode promo or non-placeholder source */
@@ -313,11 +313,11 @@ export default function WatchPage() {
           /* No video — show Jikan episode info card */
           <div className="w-full aspect-video flex items-center justify-center bg-midnight">
             <div className="text-center space-y-4 max-w-sm px-6">
-              <Film className="w-16 h-16 text-[#4A4A6A] mx-auto" />
+              <Film className="w-16 h-16 text-dim mx-auto" />
               <div>
-                <p className="text-[#F0F0F5] font-heading font-semibold text-lg">{displayTitle}</p>
+                <p className="text-fg font-heading font-semibold text-lg">{displayTitle}</p>
                 {jikanEpisode && (
-                  <div className="flex flex-wrap justify-center gap-3 mt-3 text-sm text-[#8A8AA8]">
+                  <div className="flex flex-wrap justify-center gap-3 mt-3 text-sm text-muted">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatAiredDate(jikanEpisode.aired)}
@@ -337,7 +337,7 @@ export default function WatchPage() {
                   </div>
                 )}
               </div>
-              <p className="text-[#4A4A6A] text-xs">
+              <p className="text-dim text-xs">
                 Bu bölüm için video kaynağı mevcut değil.
               </p>
             </div>
@@ -349,11 +349,11 @@ export default function WatchPage() {
       <div className="bg-midnight border border-border rounded-xl p-5 space-y-3">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-heading text-2xl font-bold text-[#F0F0F5]">
+            <h1 className="font-heading text-2xl font-bold text-fg">
               Bolum {episode.episode_number}{displayTitle !== `Bolum ${episode.episode_number}` ? `: ${displayTitle}` : ""}
             </h1>
             {jikanEpisode?.title_japanese && (
-              <p className="text-sm text-[#4A4A6A] mt-0.5">{jikanEpisode.title_japanese}</p>
+              <p className="text-sm text-dim mt-0.5">{jikanEpisode.title_japanese}</p>
             )}
             <div className="flex flex-wrap gap-2 mt-1">
               {episode.is_premium && <Badge variant="premium"><Lock className="w-2.5 h-2.5 mr-1" />Premium</Badge>}
@@ -365,7 +365,7 @@ export default function WatchPage() {
                 </span>
               )}
               {jikanEpisode?.aired && (
-                <span className="flex items-center gap-1 text-xs text-[#8A8AA8]">
+                <span className="flex items-center gap-1 text-xs text-muted">
                   <Calendar className="w-3 h-3" />
                   {formatAiredDate(jikanEpisode.aired)}
                 </span>
@@ -384,7 +384,7 @@ export default function WatchPage() {
               href={`https://myanimelist.net/anime/${anime.mal_id}/episode/${episode.episode_number}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#4A4A6A] hover:text-[#6C5CE7] transition-colors shrink-0 ml-4"
+              className="text-xs text-dim hover:text-[#6C5CE7] transition-colors shrink-0 ml-4"
             >
               MAL →
             </a>
@@ -413,7 +413,7 @@ export default function WatchPage() {
       {/* Episode List */}
       {siblingEpisodes.length > 1 && (
         <div className="bg-midnight border border-border rounded-xl overflow-hidden">
-          <h3 className="font-heading text-lg font-semibold text-[#F0F0F5] px-5 py-3 border-b border-border">
+          <h3 className="font-heading text-lg font-semibold text-fg px-5 py-3 border-b border-border">
             Bolumler
           </h3>
           <div className="divide-y divide-border max-h-80 overflow-y-auto">
@@ -423,12 +423,12 @@ export default function WatchPage() {
                 href={`/anime/${animeId}/watch/${ep.episode_id}`}
                 className={`flex items-center gap-3 px-5 py-3 hover:bg-obsidian/50 transition-colors ${ep.episode_id === epId ? "bg-crimson/10 border-l-2 border-crimson" : ""}`}
               >
-                <span className="text-[#4A4A6A] text-sm w-8 shrink-0">{ep.episode_number}.</span>
-                <span className={`text-sm flex-1 truncate ${ep.episode_id === epId ? "text-crimson font-semibold" : "text-[#F0F0F5]"}`}>
+                <span className="text-dim text-sm w-8 shrink-0">{ep.episode_number}.</span>
+                <span className={`text-sm flex-1 truncate ${ep.episode_id === epId ? "text-crimson font-semibold" : "text-fg"}`}>
                   {ep.title ?? `Bolum ${ep.episode_number}`}
                 </span>
                 {ep.is_premium && <Lock className="w-3 h-3 text-violet shrink-0" />}
-                {ep.duration_seconds && <span className="text-xs text-[#4A4A6A]">{formatDuration(ep.duration_seconds)}</span>}
+                {ep.duration_seconds && <span className="text-xs text-dim">{formatDuration(ep.duration_seconds)}</span>}
               </Link>
             ))}
           </div>

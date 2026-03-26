@@ -33,10 +33,10 @@ export default function JikanLookupPage() {
           <Zap className="w-5 h-5" />
           <span className="text-xs font-semibold tracking-widest uppercase">Jikan API v4</span>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-[#F0F0F5]">
+        <h1 className="font-heading text-3xl font-bold text-fg">
           Anime Bölüm Arama
         </h1>
-        <p className="text-[#8A8AA8] text-sm">
+        <p className="text-muted text-sm">
           MyAnimeList ID'si ile herhangi bir animenin tüm bölümlerini
           pagination dahil çek.
         </p>
@@ -44,7 +44,7 @@ export default function JikanLookupPage() {
 
       {/* Arama kutusu */}
       <div className="bg-midnight border border-border rounded-2xl p-5 space-y-3">
-        <label className="text-xs font-semibold text-[#8A8AA8] uppercase tracking-wider">
+        <label className="text-xs font-semibold text-muted uppercase tracking-wider">
           MAL Anime ID
         </label>
         <div className="flex gap-2">
@@ -55,7 +55,7 @@ export default function JikanLookupPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && go(input)}
-            className="flex-1 bg-obsidian border border-border rounded-xl px-4 py-2.5 text-[#F0F0F5] text-sm placeholder-[#4A4A6A] focus:outline-none focus:border-[#6C5CE7] transition-colors"
+            className="flex-1 bg-obsidian border border-border rounded-xl px-4 py-2.5 text-fg text-sm placeholder-dim focus:outline-none focus:border-[#6C5CE7] transition-colors"
           />
           <button
             onClick={() => go(input)}
@@ -65,7 +65,7 @@ export default function JikanLookupPage() {
             Ara
           </button>
         </div>
-        <p className="text-xs text-[#4A4A6A]">
+        <p className="text-xs text-dim">
           MAL ID'yi{" "}
           <a
             href="https://myanimelist.net"
@@ -81,7 +81,7 @@ export default function JikanLookupPage() {
 
       {/* Hızlı seçimler */}
       <div className="space-y-3">
-        <p className="text-xs font-semibold text-[#8A8AA8] uppercase tracking-wider">
+        <p className="text-xs font-semibold text-muted uppercase tracking-wider">
           Popüler Animeler
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -91,10 +91,10 @@ export default function JikanLookupPage() {
               onClick={() => go(a.id)}
               className="flex items-center justify-between gap-2 bg-midnight border border-border hover:border-[#6C5CE7] rounded-xl px-3 py-2.5 text-left transition-colors group"
             >
-              <span className="text-sm text-[#F0F0F5] truncate group-hover:text-[#6C5CE7] transition-colors">
+              <span className="text-sm text-fg truncate group-hover:text-[#6C5CE7] transition-colors">
                 {a.title}
               </span>
-              <span className="text-xs text-[#4A4A6A] shrink-0">#{a.id}</span>
+              <span className="text-xs text-dim shrink-0">#{a.id}</span>
             </button>
           ))}
         </div>

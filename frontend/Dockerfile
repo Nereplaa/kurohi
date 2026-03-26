@@ -1,7 +1,7 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install --frozen-lockfile 2>/dev/null || npm install
+RUN npm install --frozen-lockfile 2>/dev/null || npm install --legacy-peer-deps
 
 FROM node:20-alpine AS builder
 WORKDIR /app

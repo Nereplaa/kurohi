@@ -1,6 +1,6 @@
 from app.schemas.token import Token, TokenData
 from app.schemas.role import RoleOut
-from app.schemas.user import UserCreate, UserUpdate, UserOut
+from app.schemas.user import UserCreate, UserUpdate, UserOut, ChangePasswordRequest
 from app.schemas.genre import GenreCreate, GenreOut
 from app.schemas.anime import AnimeCreate, AnimeUpdate, AnimeOut
 from app.schemas.season import SeasonCreate, SeasonOut
@@ -13,7 +13,7 @@ from app.schemas.subscription import SubscriptionCreate, SubscriptionOut
 __all__ = [
     "Token", "TokenData",
     "RoleOut",
-    "UserCreate", "UserUpdate", "UserOut",
+    "UserCreate", "UserUpdate", "UserOut", "ChangePasswordRequest",
     "GenreCreate", "GenreOut",
     "AnimeCreate", "AnimeUpdate", "AnimeOut",
     "SeasonCreate", "SeasonOut",

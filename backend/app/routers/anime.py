@@ -1,6 +1,7 @@
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Set
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -13,12 +14,41 @@ router = APIRouter(prefix="/anime", tags=["Anime"])
 ContentManagerOrAdmin = Depends(require_role("content_manager", "admin"))
 
 
+@router.get("/featured", response_model=List[AnimeOut])
+def get_featured_anime(db: Annotated[Session, Depends(get_db)]):
+    """En çok incelenen ve en yüksek puanlı 7 animeyi döndürür."""
+    results = (
+        db.query(Anime)
+        .join(Review, Review.anime_id == Anime.anime_id)
+        .filter(Review.review_status == ReviewStatus.approved)
+        .group_by(Anime.anime_id)
+        .order_by(
+            func.count(Review.review_id).desc(),
+            func.avg(Review.rating).desc(),
+        )
+        .limit(7)
+        .all()
+    )
+    # Yeterli yorum yoksa en yeni animelerle tamamla
+    if len(results) < 7:
+        existing_ids = [a.anime_id for a in results]
+        extra = (
+            db.query(Anime)
+            .filter(Anime.anime_id.notin_(existing_ids))
+            .order_by(Anime.created_at.desc())
+            .limit(7 - len(results))
+            .all()
+        )
+        results = results + extra
+    return results
+
+
 @router.get("/", response_model=List[AnimeOut])
 def list_anime(
     db: Annotated[Session, Depends(get_db)],
     skip: int = Query(0, ge=0),
     limit: int = Query(24, ge=1, le=100),
-    genre_id: Optional[int] = Query(None),
+    genre_ids: Optional[List[int]] = Query(None),
     release_year: Optional[int] = Query(None),
     search: Optional[str] = Query(None, min_length=1),
 ):
@@ -27,8 +57,8 @@ def list_anime(
         q = q.filter(Anime.title.ilike(f"%{search}%"))
     if release_year:
         q = q.filter(Anime.release_year == release_year)
-    if genre_id:
-        q = q.filter(Anime.genres.any(Genre.genre_id == genre_id))
+    if genre_ids:
+        q = q.filter(Anime.genres.any(Genre.genre_id.in_(genre_ids)))
     return q.offset(skip).limit(limit).all()
 
 

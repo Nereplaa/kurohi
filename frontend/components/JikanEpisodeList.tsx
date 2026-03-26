@@ -41,18 +41,18 @@ function EpisodeCard({ ep }: { ep: JikanEpisode }) {
       </div>
 
       {/* Başlık */}
-      <p className="text-sm font-medium text-[#F0F0F5] line-clamp-2 leading-snug flex-1">
+      <p className="text-sm font-medium text-fg line-clamp-2 leading-snug flex-1">
         {ep.title ?? ep.title_romanji ?? `Bölüm ${ep.mal_id}`}
       </p>
 
       {/* Japonca başlık */}
       {ep.title_japanese && (
-        <p className="text-xs text-[#4A4A6A] truncate">{ep.title_japanese}</p>
+        <p className="text-xs text-dim truncate">{ep.title_japanese}</p>
       )}
 
       {/* Alt bilgiler */}
       <div className="flex items-center justify-between pt-1 border-t border-border">
-        <div className="flex items-center gap-1 text-[#8A8AA8]">
+        <div className="flex items-center gap-1 text-muted">
           <Calendar className="w-3 h-3 shrink-0" />
           <span className="text-xs">{formatAiredDate(ep.aired)}</span>
         </div>
@@ -176,12 +176,12 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
   if (!loaded && !loading) {
     return (
       <div className="flex flex-col items-center gap-4 py-16 text-center">
-        <Film className="w-12 h-12 text-[#4A4A6A]" />
+        <Film className="w-12 h-12 text-dim" />
         <div>
-          <p className="text-[#F0F0F5] font-heading text-lg font-semibold">
+          <p className="text-fg font-heading text-lg font-semibold">
             {initialTitle ?? `MAL ID: ${malId}`}
           </p>
-          <p className="text-[#8A8AA8] text-sm mt-1">
+          <p className="text-muted text-sm mt-1">
             Jikan API üzerinden tüm bölümleri yüklemek için başlat.
           </p>
         </div>
@@ -201,13 +201,13 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
       <div className="flex flex-col items-center gap-4 py-16 text-center">
         <Loader2 className="w-10 h-10 text-[#6C5CE7] animate-spin" />
         <div>
-          <p className="text-[#F0F0F5] font-semibold">Jikan'dan çekiliyor...</p>
+          <p className="text-fg font-semibold">Jikan'dan çekiliyor...</p>
           {progress && (
-            <p className="text-[#8A8AA8] text-sm mt-1">
+            <p className="text-muted text-sm mt-1">
               Sayfa {progress.page} — {progress.loaded} bölüm yüklendi
             </p>
           )}
-          <p className="text-[#4A4A6A] text-xs mt-1">
+          <p className="text-dim text-xs mt-1">
             Rate limit koruması aktif (600ms/sayfa)
           </p>
         </div>
@@ -220,12 +220,12 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
       <div className="flex flex-col items-center gap-4 py-12 text-center">
         <AlertCircle className="w-10 h-10 text-red-400" />
         <div>
-          <p className="text-[#F0F0F5] font-semibold">Yükleme başarısız</p>
-          <p className="text-[#8A8AA8] text-sm mt-1">{error}</p>
+          <p className="text-fg font-semibold">Yükleme başarısız</p>
+          <p className="text-muted text-sm mt-1">{error}</p>
         </div>
         <button
           onClick={load}
-          className="flex items-center gap-2 px-4 py-2 bg-midnight border border-border hover:border-[#6C5CE7] text-sm text-[#F0F0F5] rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-midnight border border-border hover:border-[#6C5CE7] text-sm text-fg rounded-lg transition-colors"
         >
           <RefreshCw className="w-3.5 h-3.5" /> Tekrar Dene
         </button>
@@ -248,11 +248,11 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
           )}
           <div className="flex-1 min-w-0 space-y-1.5">
             <div>
-              <h2 className="font-heading font-bold text-[#F0F0F5] text-lg leading-tight truncate">
+              <h2 className="font-heading font-bold text-fg text-lg leading-tight truncate">
                 {animeInfo.title}
               </h2>
               {animeInfo.title_japanese && (
-                <p className="text-xs text-[#4A4A6A] truncate">{animeInfo.title_japanese}</p>
+                <p className="text-xs text-dim truncate">{animeInfo.title_japanese}</p>
               )}
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -273,7 +273,7 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
           <button
             onClick={load}
             title="Yenile"
-            className="self-start p-1.5 text-[#4A4A6A] hover:text-[#6C5CE7] transition-colors"
+            className="self-start p-1.5 text-dim hover:text-[#6C5CE7] transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -283,13 +283,13 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
       {/* Arama + filtre çubuğu */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A6A]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dim" />
           <input
             type="text"
             placeholder="Bölüm ara (numara veya başlık)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-midnight border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#F0F0F5] placeholder-[#4A4A6A] focus:outline-none focus:border-[#6C5CE7] transition-colors"
+            className="w-full bg-midnight border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-fg placeholder-dim focus:outline-none focus:border-[#6C5CE7] transition-colors"
           />
         </div>
         <div className="flex gap-1.5 shrink-0">
@@ -300,7 +300,7 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
               className={`px-3 py-2 rounded-xl text-xs font-semibold capitalize transition-colors ${
                 filter === f
                   ? "bg-[#6C5CE7] text-white"
-                  : "bg-midnight border border-border text-[#8A8AA8] hover:border-[#6C5CE7]"
+                  : "bg-midnight border border-border text-muted hover:border-[#6C5CE7]"
               }`}
             >
               {f === "all" ? "Tümü" : f === "canon" ? "Canon" : f === "filler" ? "Filler" : "Recap"}
@@ -311,7 +311,7 @@ export function JikanEpisodeList({ malId, initialTitle }: Props) {
 
       {/* Boş sonuç */}
       {filtered.length === 0 && (
-        <div className="text-center py-12 text-[#4A4A6A]">
+        <div className="text-center py-12 text-dim">
           <Search className="w-8 h-8 mx-auto mb-2" />
           <p>"{search}" için sonuç bulunamadı.</p>
         </div>

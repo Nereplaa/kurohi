@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { User, Heart, Clock, Star, Loader2, Trash2, Edit2, Check, X } from "lucide-react";
+import { User, Heart, Clock, Star, Loader2, Trash2, Edit2, Check, X, Lock, Eye, EyeOff, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth";
 import { userApi, getErrorMessage } from "@/lib/api";
@@ -29,11 +29,22 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [editSurname, setEditSurname] = useState("");
+  const [editEmail, setEditEmail] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // Password change state
+  const [showPasswordCard, setShowPasswordCard] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) { router.push("/login"); return; }
-    if (user) { setEditName(user.name); setEditSurname(user.surname); }
+    if (user) { setEditName(user.name); setEditSurname(user.surname); setEditEmail(user.email); }
   }, [user, isLoading, router]);
 
   useEffect(() => {
@@ -51,12 +62,32 @@ export default function ProfilePage() {
   const saveProfile = async () => {
     setSaving(true);
     try {
-      await userApi.updateProfile({ name: editName, surname: editSurname });
+      await userApi.updateProfile({ name: editName, surname: editSurname, email: editEmail });
       await fetchMe();
       setEditing(false);
       toast.success("Profil güncellendi.");
     } catch (err) { toast.error(getErrorMessage(err)); }
     finally { setSaving(false); }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Yeni şifreler eşleşmiyor.");
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      await userApi.changePassword({
+        current_password: currentPassword,
+        new_password: newPassword,
+        new_password_confirm: confirmPassword,
+      });
+      toast.success("Şifre başarıyla değiştirildi.");
+      setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+      setShowPasswordCard(false);
+    } catch (err) { toast.error(getErrorMessage(err)); }
+    finally { setChangingPassword(false); }
   };
 
   const removeFavorite = async (animeId: number) => {
@@ -96,21 +127,28 @@ export default function ProfilePage() {
           </div>
           <div className="flex-1">
             {editing ? (
-              <div className="flex gap-2 items-end">
-                <Input value={editName} onChange={e => setEditName(e.target.value)} label="Ad" className="w-32" />
-                <Input value={editSurname} onChange={e => setEditSurname(e.target.value)} label="Soyad" className="w-36" />
-                <Button size="sm" onClick={saveProfile} loading={saving}><Check className="w-3.5 h-3.5" /></Button>
-                <Button size="sm" variant="ghost" onClick={() => setEditing(false)}><X className="w-3.5 h-3.5" /></Button>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input value={editName} onChange={e => setEditName(e.target.value)} label="Ad" className="w-32" />
+                  <Input value={editSurname} onChange={e => setEditSurname(e.target.value)} label="Soyad" className="w-36" />
+                </div>
+                <Input value={editEmail} onChange={e => setEditEmail(e.target.value)} label="E-posta" type="email" className="max-w-xs" />
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={saveProfile} loading={saving}><Check className="w-3.5 h-3.5 mr-1" />Kaydet</Button>
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setEditName(user.name); setEditSurname(user.surname); setEditEmail(user.email); }}>
+                    <X className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h1 className="font-heading text-2xl font-bold text-[#F0F0F5]">{user.name} {user.surname}</h1>
-                <button onClick={() => setEditing(true)} className="p-1 text-[#4A4A6A] hover:text-[#F0F0F5] transition-colors">
+                <h1 className="font-heading text-2xl font-bold text-fg">{user.name} {user.surname}</h1>
+                <button onClick={() => setEditing(true)} className="p-1 text-dim hover:text-fg transition-colors">
                   <Edit2 className="w-4 h-4" />
                 </button>
               </div>
             )}
-            <p className="text-[#8A8AA8] text-sm mt-0.5">{user.email}</p>
+            {!editing && <p className="text-muted text-sm mt-0.5">{user.email}</p>}
             <div className="flex gap-2 mt-2">
               <Badge variant={user.account_status === "active" ? "success" : "danger"}>
                 {user.account_status === "active" ? "Aktif" : "Banlı"}
@@ -122,13 +160,87 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Password Change Card */}
+      <div className="bg-midnight border border-border rounded-2xl overflow-hidden">
+        <button
+          onClick={() => setShowPasswordCard((v) => !v)}
+          className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/5 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <Lock className="w-4 h-4 text-muted" />
+            <span className="font-medium text-fg text-sm">Şifre Değiştir</span>
+          </div>
+          {showPasswordCard ? <ChevronUp className="w-4 h-4 text-dim" /> : <ChevronDown className="w-4 h-4 text-dim" />}
+        </button>
+
+        {showPasswordCard && (
+          <form onSubmit={handleChangePassword} className="px-6 pb-6 space-y-4 border-t border-border">
+            <div className="pt-4 space-y-3">
+              {/* Current password */}
+              <div className="relative max-w-sm">
+                <Input
+                  label="Mevcut Şifre"
+                  type={showCurrent ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={e => setCurrentPassword(e.target.value)}
+                  required
+                />
+                <button type="button" onClick={() => setShowCurrent(v => !v)}
+                  className="absolute right-3 top-8 text-dim hover:text-fg transition-colors">
+                  {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* New password */}
+              <div className="relative max-w-sm">
+                <Input
+                  label="Yeni Şifre"
+                  type={showNew ? "text" : "password"}
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  required
+                  minLength={8}
+                />
+                <button type="button" onClick={() => setShowNew(v => !v)}
+                  className="absolute right-3 top-8 text-dim hover:text-fg transition-colors">
+                  {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Confirm password */}
+              <div className="relative max-w-sm">
+                <Input
+                  label="Yeni Şifre (Tekrar)"
+                  type={showConfirm ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={8}
+                />
+                <button type="button" onClick={() => setShowConfirm(v => !v)}
+                  className="absolute right-3 top-8 text-dim hover:text-fg transition-colors">
+                  {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+                {confirmPassword && newPassword !== confirmPassword && (
+                  <p className="text-xs text-red-400 mt-1">Şifreler eşleşmiyor.</p>
+                )}
+              </div>
+            </div>
+
+            <Button type="submit" size="sm" loading={changingPassword}>
+              Şifreyi Güncelle
+            </Button>
+          </form>
+        )}
+      </div>
+
       {/* Tabs */}
       <div className="flex gap-1 bg-midnight border border-border rounded-xl p-1">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${tab === t.key ? "bg-crimson text-white" : "text-[#8A8AA8] hover:text-[#F0F0F5]"}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${tab === t.key ? "bg-crimson text-white" : "text-muted hover:text-fg"}`}
           >
             {t.icon}<span className="hidden sm:inline">{t.label}</span>
           </button>
@@ -152,17 +264,17 @@ export default function ProfilePage() {
                     {fav.anime?.cover_image_url ? (
                       <img src={fav.anime.cover_image_url} alt={fav.anime.title} className="w-10 h-14 object-cover rounded-lg shrink-0" />
                     ) : (
-                      <div className="w-10 h-14 bg-obsidian rounded-lg shrink-0 flex items-center justify-center text-[#4A4A6A] text-lg">🎬</div>
+                      <div className="w-10 h-14 bg-obsidian rounded-lg shrink-0 flex items-center justify-center text-dim text-lg">🎬</div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#F0F0F5] group-hover:text-crimson transition-colors font-medium text-sm truncate">
+                      <p className="text-fg group-hover:text-crimson transition-colors font-medium text-sm truncate">
                         {fav.anime?.title ?? `Anime #${fav.anime_id}`}
                       </p>
-                      <p className="text-xs text-[#4A4A6A] mt-0.5">{formatDate(fav.created_at)}</p>
+                      <p className="text-xs text-dim mt-0.5">{formatDate(fav.created_at)}</p>
                     </div>
                     <button
                       onClick={e => { e.preventDefault(); removeFavorite(fav.anime_id); }}
-                      className="p-1 text-[#4A4A6A] hover:text-crimson transition-colors shrink-0"
+                      className="p-1 text-dim hover:text-crimson transition-colors shrink-0"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -184,9 +296,9 @@ export default function ProfilePage() {
                       className="flex items-center justify-between bg-midnight border border-border rounded-xl px-4 py-3 hover:border-border/60 transition-colors"
                     >
                       <div className="min-w-0 flex-1">
-                        {animeTitle && <p className="text-xs text-[#8A8AA8] truncate">{animeTitle}</p>}
-                        <p className="text-sm text-[#F0F0F5] font-medium truncate">{epLabel}</p>
-                        <p className="text-xs text-[#4A4A6A]">{formatDate(h.last_watched_at)}</p>
+                        {animeTitle && <p className="text-xs text-muted truncate">{animeTitle}</p>}
+                        <p className="text-sm text-fg font-medium truncate">{epLabel}</p>
+                        <p className="text-xs text-dim">{formatDate(h.last_watched_at)}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-3">
                         {h.completed_flag
@@ -213,18 +325,18 @@ export default function ProfilePage() {
                         <Badge variant={r.review_status === "approved" ? "success" : r.review_status === "rejected" ? "danger" : "warning"}>
                           {r.review_status === "approved" ? "Onaylandı" : r.review_status === "rejected" ? "Reddedildi" : "Bekliyor"}
                         </Badge>
-                        <button onClick={() => deleteReview(r.review_id)} className="p-1 text-[#4A4A6A] hover:text-crimson transition-colors">
+                        <button onClick={() => deleteReview(r.review_id)} className="p-1 text-dim hover:text-crimson transition-colors">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 10 }, (_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-[#2A2A42]"}`} />
+                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-dimmer"}`} />
                       ))}
                       <span className="ml-1 text-xs font-bold text-amber-400">{r.rating}/10</span>
                     </div>
-                    {r.comment && <p className="text-sm text-[#8A8AA8]">{r.comment}</p>}
+                    {r.comment && <p className="text-sm text-muted">{r.comment}</p>}
                   </div>
                 ))}
               </div>
@@ -234,8 +346,8 @@ export default function ProfilePage() {
             {tab === "subscriptions" && (
               subscriptions.length === 0 ? (
                 <div className="text-center py-12 space-y-3">
-                  <p className="text-[#4A4A6A]">Aktif aboneliğiniz bulunmuyor.</p>
-                  <p className="text-xs text-[#4A4A6A]">Premium içeriklere erişmek için bir abonelik planı edinin.</p>
+                  <p className="text-dim">Aktif aboneliğiniz bulunmuyor.</p>
+                  <p className="text-xs text-dim">Premium içeriklere erişmek için bir abonelik planı edinin.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -244,8 +356,8 @@ export default function ProfilePage() {
                     return (
                       <div key={s.subscription_id} className="flex items-center justify-between bg-midnight border border-border rounded-xl px-5 py-4">
                         <div>
-                          <p className="font-medium text-[#F0F0F5]">{s.plan_name}</p>
-                          <p className="text-xs text-[#4A4A6A]">{formatDate(s.start_date)} — {formatDate(s.end_date)}</p>
+                          <p className="font-medium text-fg">{s.plan_name}</p>
+                          <p className="text-xs text-dim">{formatDate(s.start_date)} — {formatDate(s.end_date)}</p>
                         </div>
                         <Badge variant={active ? "success" : "default"}>{active ? "Aktif" : "Sona Erdi"}</Badge>
                       </div>
@@ -263,7 +375,7 @@ export default function ProfilePage() {
 
 function Empty({ text }: { text: string }) {
   return (
-    <div className="text-center py-12 text-[#4A4A6A]">
+    <div className="text-center py-12 text-dim">
       <p className="text-3xl mb-2">📭</p>
       <p className="text-sm">{text}</p>
     </div>

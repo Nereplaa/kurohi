@@ -9,11 +9,12 @@ from app.models import (
     Subscription, User, WatchHistory,
 )
 from app.schemas import (
-    FavoriteOut, ReviewCreate, ReviewOut, ReviewUpdate,
+    ChangePasswordRequest, FavoriteOut, ReviewCreate, ReviewOut, ReviewUpdate,
     SubscriptionCreate, SubscriptionOut,
     UserOut, UserUpdate, WatchHistoryOut,
 )
 from app.core.deps import get_active_user, require_role
+from app.core.security import verify_password, hash_password
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -21,6 +22,27 @@ AdminOnly = Depends(require_role("admin"))
 
 
 # --- Profil ---
+
+@router.post("/me/change-password")
+def change_password(
+    payload: ChangePasswordRequest,
+    db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_active_user)],
+):
+    if not verify_password(payload.current_password, current_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Mevcut sifre yanlis.",
+        )
+    if payload.new_password != payload.new_password_confirm:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Yeni sifreler eslesmedi.",
+        )
+    current_user.password_hash = hash_password(payload.new_password)
+    db.commit()
+    return {"message": "Sifre basariyla guncellendi."}
+
 
 @router.put("/me", response_model=UserOut)
 def update_profile(

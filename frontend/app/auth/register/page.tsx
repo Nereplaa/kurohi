@@ -50,8 +50,8 @@ export default function RegisterPage() {
               <Film className="w-6 h-6 text-crimson" />
             </div>
           </div>
-          <h1 className="font-heading text-3xl font-bold text-[#F0F0F5]">Hesap Oluştur</h1>
-          <p className="text-[#8A8AA8] mt-1">Anime dünyasına katıl</p>
+          <h1 className="font-heading text-3xl font-bold text-fg">Hesap Oluştur</h1>
+          <p className="text-muted mt-1">Anime dünyasına katıl</p>
         </div>
 
         <div className="bg-midnight border border-border rounded-2xl p-8 space-y-5">
@@ -68,7 +68,7 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#8A8AA8]">
+          <p className="text-center text-sm text-muted">
             Zaten hesabın var mı?{" "}
             <Link href="/login" className="text-crimson hover:text-red-400 font-medium transition-colors">
               Giriş Yap

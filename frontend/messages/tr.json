@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "search": "Anime ara...",
+    "discover": "Keşfet",
+    "favorites": "Favoriler",
+    "subscription": "Abonelik",
+    "profile": "Profilim",
+    "admin": "Admin",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "logout": "Çıkış Yap"
+  },
+  "home": {
+    "title": "Anime Keşfet",
+    "results": "{count} sonuç gösteriliyor",
+    "filter": "Filtre",
+    "genre": "Tür",
+    "all": "Tümü",
+    "clearFilters": "Filtreleri Temizle",
+    "noResults": "Sonuç bulunamadı",
+    "noResultsHint": "Farklı bir arama deneyin",
+    "allLoaded": "Tüm animeler yüklendi",
+    "search": "Ara"
+  },
+  "featured": {
+    "watch": "İzle",
+    "details": "Detaylar"
+  },
+  "anime": {
+    "seasons": "Sezon",
+    "episodes": "Bölüm",
+    "rating": "Puan",
+    "reviews": "Yorumlar",
+    "noReviews": "Henüz yorum yok.",
+    "addFavorite": "Favorilere Ekle",
+    "removeFavorite": "Favorilerden Çıkar",
+    "premium": "Premium",
+    "watchEpisode": "İzle",
+    "locked": "Kilitli",
+    "back": "Geri"
+  },
+  "profile": {
+    "editProfile": "Profili Düzenle",
+    "changePassword": "Şifre Değiştir",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "currentPassword": "Mevcut Şifre",
+    "newPassword": "Yeni Şifre",
+    "confirmPassword": "Yeni Şifre (Tekrar)",
+    "updatePassword": "Şifreyi Güncelle",
+    "passwordMismatch": "Şifreler eşleşmiyor.",
+    "tabs": {
+      "favorites": "Favoriler",
+      "history": "İzleme Geçmişi",
+      "reviews": "Yorumlarım",
+      "subscriptions": "Abonelikler"
+    },
+    "empty": {
+      "favorites": "Henüz favori anime eklemediniz.",
+      "history": "Henüz izleme geçmişiniz yok.",
+      "reviews": "Henüz yorum yapmadınız.",
+      "subscriptions": "Aktif aboneliğiniz bulunmuyor."
+    },
+    "status": {
+      "active": "Aktif",
+      "banned": "Banlı",
+      "member": "Üye",
+      "contentManager": "İçerik Yöneticisi",
+      "admin": "Admin",
+      "premium": "Premium"
+    },
+    "review": {
+      "approved": "Onaylandı",
+      "rejected": "Reddedildi",
+      "pending": "Bekliyor"
+    },
+    "subscription": {
+      "active": "Aktif",
+      "expired": "Sona Erdi"
+    },
+    "watchProgress": {
+      "completed": "Tamamlandı",
+      "watched": "{min} dk izlendi"
+    }
+  },
+  "auth": {
+    "loginTitle": "Giriş Yap",
+    "registerTitle": "Kayıt Ol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "loginButton": "Giriş Yap",
+    "registerButton": "Kayıt Ol",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "signUp": "Kayıt olun",
+    "signIn": "Giriş yapın"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu.",
+    "notFound": "Sayfa bulunamadı.",
+    "completed": "Tamamlandı",
+    "active": "Aktif",
+    "inactive": "Pasif"
+  }
+}

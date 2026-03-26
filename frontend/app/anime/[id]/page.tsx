@@ -144,7 +144,7 @@ export default function AnimeDetailPage() {
           {/* Info */}
           <div className="flex-1 space-y-3">
             <div>
-              <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#F0F0F5]">{anime.title}</h1>
+              <h1 className="font-heading text-3xl md:text-4xl font-bold text-fg">{anime.title}</h1>
               <div className="flex flex-wrap gap-2 mt-2">
                 {anime.genres.map(g => <Badge key={g.genre_id}>{g.genre_name}</Badge>)}
                 {anime.age_rating && <Badge variant="warning">{anime.age_rating}</Badge>}
@@ -154,7 +154,7 @@ export default function AnimeDetailPage() {
             </div>
 
             {anime.description && (
-              <p className="text-[#8A8AA8] text-sm leading-relaxed line-clamp-4">{anime.description}</p>
+              <p className="text-muted text-sm leading-relaxed line-clamp-4">{anime.description}</p>
             )}
 
             <div className="flex flex-wrap gap-3 pt-2">
@@ -174,10 +174,10 @@ export default function AnimeDetailPage() {
         <div className="bg-midnight border border-border rounded-xl p-5 space-y-4">
           <h3 className="font-heading text-lg font-semibold">{myReviewId ? "Yorumu Düzenle" : "Yorum Yap"}</h3>
           <div>
-            <p className="text-sm text-[#8A8AA8] mb-2">Puan: <span className="text-crimson font-bold">{rating}/10</span></p>
+            <p className="text-sm text-muted mb-2">Puan: <span className="text-crimson font-bold">{rating}/10</span></p>
             <div className="flex gap-1">
               {Array.from({ length: 10 }, (_, i) => i + 1).map(n => (
-                <button key={n} onClick={() => setRating(n)} className={`w-8 h-8 rounded text-sm font-semibold transition-colors ${n <= rating ? "bg-crimson text-white" : "bg-obsidian text-[#4A4A6A] border border-border hover:border-crimson"}`}>{n}</button>
+                <button key={n} onClick={() => setRating(n)} className={`w-8 h-8 rounded text-sm font-semibold transition-colors ${n <= rating ? "bg-crimson text-white" : "bg-obsidian text-dim border border-border hover:border-crimson"}`}>{n}</button>
               ))}
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function AnimeDetailPage() {
             onChange={e => setComment(e.target.value)}
             placeholder="Düşüncelerinizi yazın... (opsiyonel)"
             rows={3}
-            className="w-full bg-obsidian border border-border rounded-lg px-4 py-2.5 text-sm text-[#F0F0F5] placeholder-[#4A4A6A] focus:outline-none focus:border-crimson resize-none"
+            className="w-full bg-obsidian border border-border rounded-lg px-4 py-2.5 text-sm text-fg placeholder-dim focus:outline-none focus:border-crimson resize-none"
           />
           <div className="flex gap-2">
             <Button onClick={submitReview} loading={submittingReview} size="sm">
@@ -201,9 +201,9 @@ export default function AnimeDetailPage() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Seasons & Episodes */}
         <div className="lg:col-span-2 space-y-3">
-          <h2 className="font-heading text-2xl font-bold text-[#F0F0F5]">Bölümler</h2>
+          <h2 className="font-heading text-2xl font-bold text-fg">Bölümler</h2>
           {anime.seasons.length === 0 ? (
-            <div className="bg-midnight border border-border rounded-xl p-6 text-center text-[#4A4A6A]">Henüz bölüm eklenmemiş.</div>
+            <div className="bg-midnight border border-border rounded-xl p-6 text-center text-dim">Henüz bölüm eklenmemiş.</div>
           ) : (
             anime.seasons.map(season => (
               <div key={season.season_id} className="bg-midnight border border-border rounded-xl overflow-hidden">
@@ -212,22 +212,22 @@ export default function AnimeDetailPage() {
                   className="w-full flex items-center justify-between px-5 py-4 hover:bg-obsidian transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-heading font-semibold text-[#F0F0F5]">
+                    <span className="font-heading font-semibold text-fg">
                       {season.season_title ?? `${season.season_number}. Sezon`}
                     </span>
                     <Badge>{season.episodes.length} bölüm</Badge>
                   </div>
-                  {openSeason === season.season_id ? <ChevronUp className="w-4 h-4 text-[#8A8AA8]" /> : <ChevronDown className="w-4 h-4 text-[#8A8AA8]" />}
+                  {openSeason === season.season_id ? <ChevronUp className="w-4 h-4 text-muted" /> : <ChevronDown className="w-4 h-4 text-muted" />}
                 </button>
 
                 {openSeason === season.season_id && (
                   <div className="border-t border-border divide-y divide-border">
                     {season.episodes.map(ep => (
                       <div key={ep.episode_id} className={`flex items-center gap-3 px-5 py-3 hover:bg-obsidian/50 transition-colors ${watchedEps.has(ep.episode_id) ? "opacity-60" : ""}`}>
-                        <span className="text-[#4A4A6A] text-sm w-8 shrink-0">{ep.episode_number}.</span>
+                        <span className="text-dim text-sm w-8 shrink-0">{ep.episode_number}.</span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-[#F0F0F5] truncate">{ep.title ?? `Bölüm ${ep.episode_number}`}</p>
-                          {ep.duration_seconds && <p className="text-xs text-[#4A4A6A]">{formatDuration(ep.duration_seconds)}</p>}
+                          <p className="text-sm text-fg truncate">{ep.title ?? `Bölüm ${ep.episode_number}`}</p>
+                          {ep.duration_seconds && <p className="text-xs text-dim">{formatDuration(ep.duration_seconds)}</p>}
                         </div>
                         {ep.is_premium && <Badge variant="premium"><Lock className="w-2.5 h-2.5 mr-1" />Premium</Badge>}
                         {watchedEps.has(ep.episode_id) && <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />}
@@ -252,9 +252,9 @@ export default function AnimeDetailPage() {
 
         {/* Reviews */}
         <div className="space-y-3">
-          <h2 className="font-heading text-2xl font-bold text-[#F0F0F5]">Yorumlar</h2>
+          <h2 className="font-heading text-2xl font-bold text-fg">Yorumlar</h2>
           {reviews.length === 0 ? (
-            <div className="bg-midnight border border-border rounded-xl p-5 text-center text-[#4A4A6A] text-sm">
+            <div className="bg-midnight border border-border rounded-xl p-5 text-center text-dim text-sm">
               Henüz yorum yok. İlk yorumu sen yap!
             </div>
           ) : (
@@ -263,13 +263,13 @@ export default function AnimeDetailPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     {Array.from({ length: 10 }, (_, i) => (
-                      <Star key={i} className={`w-3 h-3 ${i < review.rating ? "fill-amber-400 text-amber-400" : "text-[#2A2A42]"}`} />
+                      <Star key={i} className={`w-3 h-3 ${i < review.rating ? "fill-amber-400 text-amber-400" : "text-dimmer"}`} />
                     ))}
                     <span className="ml-1 text-xs font-bold text-amber-400">{review.rating}/10</span>
                   </div>
-                  <span className="text-xs text-[#4A4A6A]">{formatDate(review.created_at)}</span>
+                  <span className="text-xs text-dim">{formatDate(review.created_at)}</span>
                 </div>
-                {review.comment && <p className="text-sm text-[#8A8AA8]">{review.comment}</p>}
+                {review.comment && <p className="text-sm text-muted">{review.comment}</p>}
               </div>
             ))
           )}

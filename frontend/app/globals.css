@@ -4,15 +4,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Dark theme (default) ─────────────────────────────────────────────── */
 :root {
+  --color-abyss:      #0B0D17;
+  --color-midnight:   #111425;
+  --color-slate:      #1A1D2E;
+  --color-obsidian:   #212438;
+  --color-border:     #2A2D3E;
+  --color-crimson:    #E63946;
+  --color-violet:     #6C5CE7;
+
+  --color-anime-bg-primary:   #0B0D17;
+  --color-anime-bg-secondary: #111425;
+  --color-anime-bg-tertiary:  #1A1D2E;
+  --color-anime-bg-surface:   #212438;
+
+  --color-fg:      #F0F0F5;
+  --color-muted:   #8A8AA8;
+  --color-dim:     #4A4A6A;
+  --color-dimmer:  #2A2A42;
+
   --foreground: #F0F0F5;
   --background: #0A0A0F;
+
+  scrollbar-color: #2A2A42 #12121E;
+}
+
+/* ── Light theme ───────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-abyss:      #F0F2F8;
+  --color-midnight:   #FFFFFF;
+  --color-slate:      #E4E6F2;
+  --color-obsidian:   #ECEEF8;
+  --color-border:     #C8CCE0;
+  --color-crimson:    #E63946;
+  --color-violet:     #6C5CE7;
+
+  --color-anime-bg-primary:   #F0F2F8;
+  --color-anime-bg-secondary: #FFFFFF;
+  --color-anime-bg-tertiary:  #E4E6F2;
+  --color-anime-bg-surface:   #ECEEF8;
+
+  --color-fg:      #0A0A14;
+  --color-muted:   #5A5A7A;
+  --color-dim:     #8A8AAA;
+  --color-dimmer:  #C0C0D8;
+
+  --foreground: #0A0A14;
+  --background: #F0F2F8;
+
+  scrollbar-color: #C8CCE0 #E4E6F2;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4, h5 {
@@ -21,5 +69,4 @@ h1, h2, h3, h4, h5 {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2A2A42 #12121E;
 }

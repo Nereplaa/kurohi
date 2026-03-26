@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "search": "Search anime...",
+    "discover": "Discover",
+    "favorites": "Favorites",
+    "subscription": "Subscription",
+    "profile": "My Profile",
+    "admin": "Admin",
+    "login": "Log In",
+    "register": "Sign Up",
+    "logout": "Log Out"
+  },
+  "home": {
+    "title": "Discover Anime",
+    "results": "Showing {count} results",
+    "filter": "Filter",
+    "genre": "Genre",
+    "all": "All",
+    "clearFilters": "Clear Filters",
+    "noResults": "No results found",
+    "noResultsHint": "Try a different search",
+    "allLoaded": "All anime loaded",
+    "search": "Search"
+  },
+  "featured": {
+    "watch": "Watch",
+    "details": "Details"
+  },
+  "anime": {
+    "seasons": "Season",
+    "episodes": "Episode",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet.",
+    "addFavorite": "Add to Favorites",
+    "removeFavorite": "Remove from Favorites",
+    "premium": "Premium",
+    "watchEpisode": "Watch",
+    "locked": "Locked",
+    "back": "Back"
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "save": "Save",
+    "cancel": "Cancel",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "updatePassword": "Update Password",
+    "passwordMismatch": "Passwords do not match.",
+    "tabs": {
+      "favorites": "Favorites",
+      "history": "Watch History",
+      "reviews": "My Reviews",
+      "subscriptions": "Subscriptions"
+    },
+    "empty": {
+      "favorites": "You haven't added any favorites yet.",
+      "history": "You have no watch history yet.",
+      "reviews": "You haven't written any reviews yet.",
+      "subscriptions": "You have no active subscription."
+    },
+    "status": {
+      "active": "Active",
+      "banned": "Banned",
+      "member": "Member",
+      "contentManager": "Content Manager",
+      "admin": "Admin",
+      "premium": "Premium"
+    },
+    "review": {
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "pending": "Pending"
+    },
+    "subscription": {
+      "active": "Active",
+      "expired": "Expired"
+    },
+    "watchProgress": {
+      "completed": "Completed",
+      "watched": "{min} min watched"
+    }
+  },
+  "auth": {
+    "loginTitle": "Log In",
+    "registerTitle": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "loginButton": "Log In",
+    "registerButton": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "notFound": "Page not found.",
+    "completed": "Completed",
+    "active": "Active",
+    "inactive": "Inactive"
+  }
+}

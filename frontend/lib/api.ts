@@ -60,8 +60,20 @@ export const authApi = {
 // ── Anime ─────────────────────────────────────────────────────────────────
 
 export const animeApi = {
-  list: (params?: { skip?: number; limit?: number; search?: string; genre_id?: number }) =>
-    api.get<Anime[]>("/api/anime/", { params }).then((r) => r.data),
+  list: (params?: { skip?: number; limit?: number; search?: string; genre_ids?: number[] }) =>
+    api.get<Anime[]>("/api/anime/", {
+      params,
+      // axios serializes arrays as genre_ids[]=1&genre_ids[]=2 by default;
+      // FastAPI expects repeated keys: genre_ids=1&genre_ids=2
+      paramsSerializer: (p) => {
+        const sp = new URLSearchParams();
+        Object.entries(p).forEach(([k, v]) => {
+          if (Array.isArray(v)) v.forEach((item) => sp.append(k, String(item)));
+          else if (v !== undefined && v !== null) sp.append(k, String(v));
+        });
+        return sp.toString();
+      },
+    }).then((r) => r.data),
 
   get: (id: number) => api.get<Anime>(`/api/anime/${id}`).then((r) => r.data),
 
@@ -82,6 +94,8 @@ export const animeApi = {
 
   getReviews: (id: number, params?: { skip?: number; limit?: number }) =>
     api.get<Review[]>(`/api/reviews/${id}`, { params }).then((r) => r.data),
+
+  getFeatured: () => api.get<Anime[]>("/api/anime/featured").then((r) => r.data),
 };
 
 // ── Genres ────────────────────────────────────────────────────────────────
@@ -128,8 +142,11 @@ export const episodeApi = {
 // ── Users / Me ────────────────────────────────────────────────────────────
 
 export const userApi = {
-  updateProfile: (data: { name?: string; surname?: string }) =>
+  updateProfile: (data: { name?: string; surname?: string; email?: string }) =>
     api.put<User>("/api/users/me", data).then((r) => r.data),
+
+  changePassword: (data: { current_password: string; new_password: string; new_password_confirm: string }) =>
+    api.post<{ message: string }>("/api/users/me/change-password", data).then((r) => r.data),
 
   // Favoriler
   getFavorites: () => api.get<Favorite[]>("/api/users/me/favorites").then((r) => r.data),

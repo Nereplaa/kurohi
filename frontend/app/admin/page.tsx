@@ -90,7 +90,7 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
     <div className="border-t border-border">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-2 text-xs text-[#8A8AA8] hover:text-[#F0F0F5] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-2 text-xs text-muted hover:text-fg transition-colors"
       >
         <span>Sezon & Bölüm Yönetimi</span>
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -100,7 +100,7 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
         <div className="px-4 pb-4 space-y-4">
           {/* Sezon Ekle */}
           <div className="bg-obsidian rounded-xl p-4 space-y-3">
-            <p className="text-xs font-semibold text-[#8A8AA8] uppercase tracking-wider">Yeni Sezon</p>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wider">Yeni Sezon</p>
             <div className="flex gap-2 flex-wrap">
               <Input
                 label="Sezon No *"
@@ -136,7 +136,7 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
               {seasons.map((season) => (
                 <div key={season.season_id} className="bg-obsidian rounded-xl overflow-hidden">
                   <button
-                    className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors ${selectedSeasonId === season.season_id ? "bg-crimson/10 text-crimson" : "text-[#F0F0F5] hover:bg-midnight"}`}
+                    className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors ${selectedSeasonId === season.season_id ? "bg-crimson/10 text-crimson" : "text-fg hover:bg-midnight"}`}
                     onClick={() => setSelectedSeasonId(selectedSeasonId === season.season_id ? null : season.season_id)}
                   >
                     <span>{season.season_title ?? `${season.season_number}. Sezon`}</span>
@@ -150,14 +150,14 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
                         <div className="divide-y divide-border">
                           {(season.episodes ?? []).map((ep) => (
                             <div key={ep.episode_id} className="flex items-center gap-2 py-1.5">
-                              <span className="text-[#4A4A6A] text-xs w-6">{ep.episode_number}.</span>
-                              <span className="text-xs text-[#F0F0F5] flex-1 truncate">
+                              <span className="text-dim text-xs w-6">{ep.episode_number}.</span>
+                              <span className="text-xs text-fg flex-1 truncate">
                                 {ep.title ?? `Bölüm ${ep.episode_number}`}
                               </span>
                               {ep.is_premium && <Lock className="w-3 h-3 text-violet shrink-0" />}
                               <button
                                 onClick={() => deleteEpisode(ep.episode_id, season.season_id)}
-                                className="p-0.5 text-[#4A4A6A] hover:text-crimson transition-colors"
+                                className="p-0.5 text-dim hover:text-crimson transition-colors"
                               >
                                 <Trash2 className="w-3 h-3" />
                               </button>
@@ -168,7 +168,7 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
 
                       {/* Bölüm Ekle Formu */}
                       <div className="bg-midnight rounded-lg p-3 space-y-2">
-                        <p className="text-xs font-semibold text-[#8A8AA8]">Yeni Bölüm Ekle</p>
+                        <p className="text-xs font-semibold text-muted">Yeni Bölüm Ekle</p>
                         <div className="grid grid-cols-2 gap-2">
                           <Input
                             label="Bölüm No *"
@@ -205,7 +205,7 @@ function SeasonManager({ anime, genres }: { anime: Anime; genres: Genre[] }) {
                               onChange={(e) => setEpForm((p) => ({ ...p, is_premium: e.target.checked }))}
                               className="accent-violet"
                             />
-                            <span className="text-xs text-[#8A8AA8] flex items-center gap-1">
+                            <span className="text-xs text-muted flex items-center gap-1">
                               <Lock className="w-3 h-3" /> Premium
                             </span>
                           </label>
@@ -408,8 +408,8 @@ export default function AdminPage() {
           <Shield className="w-5 h-5 text-amber-400" />
         </div>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-[#F0F0F5]">Yönetim Paneli</h1>
-          <p className="text-[#8A8AA8] text-sm">
+          <h1 className="font-heading text-2xl font-bold text-fg">Yönetim Paneli</h1>
+          <p className="text-muted text-sm">
             {user.role.role_name === "admin" ? "Sistem Yöneticisi" : "İçerik Yöneticisi"}
           </p>
         </div>
@@ -422,7 +422,7 @@ export default function AdminPage() {
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              tab === t.key ? "bg-amber-500 text-black" : "text-[#8A8AA8] hover:text-[#F0F0F5]"
+              tab === t.key ? "bg-amber-500 text-black" : "text-muted hover:text-fg"
             }`}
           >
             {t.icon}{t.label}
@@ -452,7 +452,7 @@ export default function AdminPage() {
 
               {showAnimeForm && (
                 <div className="bg-midnight border border-border rounded-xl p-5 space-y-4">
-                  <h3 className="font-heading text-lg font-semibold text-[#F0F0F5]">Yeni Anime</h3>
+                  <h3 className="font-heading text-lg font-semibold text-fg">Yeni Anime</h3>
                   <div className="grid grid-cols-2 gap-3">
                     <Input label="Başlık *" value={animeForm.title} onChange={(e) => setAnimeForm((p) => ({ ...p, title: e.target.value }))} placeholder="Attack on Titan" />
                     <Input label="Yıl" type="number" value={animeForm.release_year} onChange={(e) => setAnimeForm((p) => ({ ...p, release_year: e.target.value }))} placeholder="2013" />
@@ -464,10 +464,10 @@ export default function AdminPage() {
                     onChange={(e) => setAnimeForm((p) => ({ ...p, description: e.target.value }))}
                     placeholder="Açıklama..."
                     rows={3}
-                    className="w-full bg-obsidian border border-border rounded-lg px-4 py-2.5 text-sm text-[#F0F0F5] placeholder-[#4A4A6A] focus:outline-none focus:border-crimson resize-none"
+                    className="w-full bg-obsidian border border-border rounded-lg px-4 py-2.5 text-sm text-fg placeholder-dim focus:outline-none focus:border-crimson resize-none"
                   />
                   <div>
-                    <p className="text-sm text-[#8A8AA8] mb-2">Türler</p>
+                    <p className="text-sm text-muted mb-2">Türler</p>
                     <div className="flex flex-wrap gap-2">
                       {genres.map((g) => (
                         <button
@@ -481,7 +481,7 @@ export default function AdminPage() {
                           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border ${
                             animeForm.genre_ids.includes(g.genre_id)
                               ? "bg-crimson border-crimson text-white"
-                              : "border-border text-[#8A8AA8] hover:border-crimson"
+                              : "border-border text-muted hover:border-crimson"
                           }`}
                         >
                           {g.genre_name}
@@ -501,7 +501,7 @@ export default function AdminPage() {
                   <div key={a.anime_id} className="bg-midnight border border-border rounded-xl overflow-hidden hover:border-crimson/30 transition-colors">
                     <div className="flex items-center gap-3 px-4 py-3">
                       <div className="flex-1 min-w-0">
-                        <p className="text-[#F0F0F5] font-medium text-sm truncate">{a.title}</p>
+                        <p className="text-fg font-medium text-sm truncate">{a.title}</p>
                         <div className="flex gap-1 mt-1 flex-wrap">
                           {a.genres.slice(0, 3).map((g) => <Badge key={g.genre_id}>{g.genre_name}</Badge>)}
                           {a.release_year && <Badge>{a.release_year}</Badge>}
@@ -538,10 +538,10 @@ export default function AdminPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {genres.map((g) => (
                   <div key={g.genre_id} className="flex items-center justify-between bg-midnight border border-border rounded-lg px-3 py-2">
-                    <span className="text-sm text-[#F0F0F5]">{g.genre_name}</span>
+                    <span className="text-sm text-fg">{g.genre_name}</span>
                     <button
                       onClick={() => deleteGenre(g.genre_id)}
-                      className="p-0.5 text-[#4A4A6A] hover:text-crimson transition-colors"
+                      className="p-0.5 text-dim hover:text-crimson transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -555,15 +555,15 @@ export default function AdminPage() {
           {tab === "reviews" && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="font-heading text-lg font-semibold text-[#F0F0F5]">
+                <h2 className="font-heading text-lg font-semibold text-fg">
                   Onay Bekleyen Yorumlar
                 </h2>
                 <Badge>{pendingReviews.length} yorum</Badge>
               </div>
 
               {pendingReviews.length === 0 ? (
-                <div className="text-center py-16 text-[#4A4A6A]">
-                  <MessageSquare className="w-10 h-10 mx-auto mb-2 text-[#2A2A42]" />
+                <div className="text-center py-16 text-dim">
+                  <MessageSquare className="w-10 h-10 mx-auto mb-2 text-dimmer" />
                   <p className="text-sm">Onay bekleyen yorum bulunmuyor.</p>
                 </div>
               ) : (
@@ -572,23 +572,23 @@ export default function AdminPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="space-y-1 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs text-[#4A4A6A]">Kullanıcı #{r.user_id}</span>
-                          <span className="text-[#4A4A6A]">•</span>
-                          <span className="text-xs text-[#4A4A6A]">Anime #{r.anime_id}</span>
-                          <span className="text-[#4A4A6A]">•</span>
-                          <span className="text-xs text-[#4A4A6A]">{formatDate(r.created_at)}</span>
+                          <span className="text-xs text-dim">Kullanıcı #{r.user_id}</span>
+                          <span className="text-dim">•</span>
+                          <span className="text-xs text-dim">Anime #{r.anime_id}</span>
+                          <span className="text-dim">•</span>
+                          <span className="text-xs text-dim">{formatDate(r.created_at)}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           {Array.from({ length: 10 }, (_, i) => (
                             <Star
                               key={i}
-                              className={`w-3 h-3 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-[#2A2A42]"}`}
+                              className={`w-3 h-3 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-dimmer"}`}
                             />
                           ))}
                           <span className="ml-1 text-xs font-bold text-amber-400">{r.rating}/10</span>
                         </div>
                         {r.comment && (
-                          <p className="text-sm text-[#8A8AA8] bg-obsidian rounded-lg px-3 py-2 mt-1">
+                          <p className="text-sm text-muted bg-obsidian rounded-lg px-3 py-2 mt-1">
                             {r.comment}
                           </p>
                         )}
@@ -623,8 +623,8 @@ export default function AdminPage() {
                 <div key={u.user_id} className="bg-midnight border border-border rounded-xl px-4 py-3">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div>
-                      <p className="text-[#F0F0F5] font-medium text-sm">{u.name} {u.surname}</p>
-                      <p className="text-[#4A4A6A] text-xs">{u.email}</p>
+                      <p className="text-fg font-medium text-sm">{u.name} {u.surname}</p>
+                      <p className="text-dim text-xs">{u.email}</p>
                       <div className="flex gap-1 mt-1">
                         <Badge>{u.role.role_name}</Badge>
                         <Badge variant={u.account_status === "active" ? "success" : "danger"}>
@@ -639,7 +639,7 @@ export default function AdminPage() {
                           <select
                             value={selectedRole}
                             onChange={(e) => setSelectedRole(e.target.value)}
-                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-[#F0F0F5] focus:outline-none focus:border-violet"
+                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-fg focus:outline-none focus:border-violet"
                           >
                             <option value="">Rol seç...</option>
                             <option value="member">Member</option>
@@ -671,13 +671,13 @@ export default function AdminPage() {
                             type="date"
                             value={subForm.start_date}
                             onChange={(e) => setSubForm((p) => ({ ...p, start_date: e.target.value }))}
-                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-[#F0F0F5] focus:outline-none"
+                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-fg focus:outline-none"
                           />
                           <input
                             type="date"
                             value={subForm.end_date}
                             onChange={(e) => setSubForm((p) => ({ ...p, end_date: e.target.value }))}
-                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-[#F0F0F5] focus:outline-none"
+                            className="bg-obsidian border border-border rounded px-2 py-1 text-xs text-fg focus:outline-none"
                           />
                           <Button size="sm" onClick={assignSub} loading={savingSub}>
                             <Check className="w-3.5 h-3.5" />

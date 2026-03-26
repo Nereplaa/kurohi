@@ -83,8 +83,8 @@ export default function FavoritesPage() {
           <Heart className="w-5 h-5 text-crimson" />
         </div>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-[#F0F0F5]">Favorilerim</h1>
-          <p className="text-[#8A8AA8] text-sm">
+          <h1 className="font-heading text-2xl font-bold text-fg">Favorilerim</h1>
+          <p className="text-muted text-sm">
             {loading ? "Yukleniyor..." : `${favorites.length} anime`}
           </p>
         </div>
@@ -96,8 +96,8 @@ export default function FavoritesPage() {
           <Loader2 className="w-6 h-6 text-crimson animate-spin" />
         </div>
       ) : favorites.length === 0 ? (
-        <div className="text-center py-20 text-[#4A4A6A] space-y-3">
-          <Heart className="w-12 h-12 mx-auto text-[#2A2A42]" />
+        <div className="text-center py-20 text-dim space-y-3">
+          <Heart className="w-12 h-12 mx-auto text-dimmer" />
           <p className="font-heading text-lg">Henuz favori anime eklemediniz</p>
           <p className="text-sm">Begendginiz animeleri favorilere ekleyerek buradan kolayca erisebilirsiniz.</p>
           <Link href="/">
@@ -126,14 +126,14 @@ export default function FavoritesPage() {
               >
                 <Link
                   href={`/anime/${fav.anime_id}`}
-                  className="text-[#F0F0F5] hover:text-crimson transition-colors font-medium text-sm"
+                  className="text-fg hover:text-crimson transition-colors font-medium text-sm"
                 >
                   Anime #{fav.anime_id}
                 </Link>
-                <p className="text-xs text-[#4A4A6A]">{formatDate(fav.created_at)}</p>
+                <p className="text-xs text-dim">{formatDate(fav.created_at)}</p>
                 <button
                   onClick={() => removeFavorite(fav.anime_id)}
-                  className="flex items-center gap-1 text-xs text-[#4A4A6A] hover:text-crimson transition-colors"
+                  className="flex items-center gap-1 text-xs text-dim hover:text-crimson transition-colors"
                 >
                   <Trash2 className="w-3 h-3" /> Kaldir
                 </button>
