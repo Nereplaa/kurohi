@@ -138,7 +138,7 @@ export function CheckoutModal({ plan, onSuccess, onClose }: Props) {
       }}
     >
       <div
-        className="relative w-full max-w-[480px] rounded-2xl overflow-hidden"
+        className="relative w-full max-w-[680px] rounded-2xl overflow-hidden overflow-y-auto max-h-[90vh]"
         style={{
           background: "var(--modal-card-bg)",
           border: "1px solid var(--modal-card-border)",
@@ -247,8 +247,8 @@ export function CheckoutModal({ plan, onSuccess, onClose }: Props) {
             {/* Iyzico renders its payment form into this div */}
             <div
               id="iyzipay-checkout-form"
-              className="responsive"
-              style={{ minHeight: 280 }}
+              className="responsive w-full"
+              style={{ minHeight: 520 }}
             />
 
             <div className="flex items-center gap-2 text-[11px]" style={{ color: "var(--modal-label)" }}>

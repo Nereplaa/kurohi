@@ -5,8 +5,8 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/anime_db"
-    SECRET_KEY: str = "change-this-secret"
+    DATABASE_URL: str = "postgresql://postgres:your_password@localhost:5432/anime_db"
+    SECRET_KEY: str = "replace-this-with-a-random-32-char-secret"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 

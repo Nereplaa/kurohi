@@ -6,10 +6,12 @@ Mock mode  (IYZICO_API_KEY is empty in .env):
   POST /mock-confirm → confirms the pending token, creates subscription, returns JSON
 
 Live mode  (IYZICO_API_KEY is set in .env):
-  POST /initiate  → calls iyzipay.CheckoutFormInitialize, returns checkout_form_content
+  POST /initiate  → calls Iyzico CheckoutFormInitialize via custom HTTP client,
+                    returns checkout_form_content
   POST /callback  → Iyzico POSTs here after payment; verifies & creates subscription;
                     redirects browser to FRONTEND_URL/subscription?payment=success|failed
 """
+import logging
 import json
 from datetime import date, timedelta
 from typing import Annotated
@@ -26,6 +28,9 @@ from app.models import Subscription, User, PendingCheckout
 from app.schemas.payment import InitiateRequest, InitiateResponse, CheckoutResponse
 from app.core.deps import get_active_user
 from app.core.config import settings
+from app.services.iyzico_client import IyzicoClient, IyzicoError
+
+logger = logging.getLogger(__name__)
 
 
 class MockConfirmRequest(BaseModel):
@@ -77,7 +82,7 @@ def initiate_checkout(
 
     - Validates plan and checks for overlapping active subscription.
     - Mock mode: generates a local token, no external call.
-    - Live mode: calls iyzipay.CheckoutFormInitialize, stores the Iyzico token.
+    - Live mode: calls Iyzico API via custom HTTP client, stores the Iyzico token.
     """
     plan = PLAN_CONFIG.get(payload.plan_name)
     if not plan:
@@ -100,13 +105,11 @@ def initiate_checkout(
     checkout_form_content: str | None = None
 
     if settings.IYZICO_API_KEY:
-        import iyzipay  # type: ignore[import]
-
-        options = {
-            "api_key": settings.IYZICO_API_KEY,
-            "secret_key": settings.IYZICO_SECRET_KEY,
-            "base_url": settings.IYZICO_BASE_URL
-        }
+        client = IyzicoClient(
+            api_key=settings.IYZICO_API_KEY,
+            secret_key=settings.IYZICO_SECRET_KEY,
+            base_url=settings.IYZICO_BASE_URL,
+        )
 
         request_body = {
             "locale": "tr",
@@ -117,17 +120,17 @@ def initiate_checkout(
             "basketId": f"kurohi-{current_user.user_id}-{uuid4().hex[:8]}",
             "paymentGroup": "SUBSCRIPTION",
             "callbackUrl": settings.CALLBACK_URL,
-            "enabledInstallments": ["1"],
+            "enabledInstallments": [1],
             "buyer": {
                 "id": str(current_user.user_id),
                 "name": getattr(current_user, "name", "Ad"),
                 "surname": getattr(current_user, "surname", "Soyad"),
                 "email": current_user.email,
-                "identityNumber": "74300864791",   # Iyzico sandbox dummy
+                "identityNumber": "74300864791",
                 "registrationAddress": "Sandbox Test Address",
                 "city": "Istanbul",
                 "country": "Turkey",
-                "ip": "85.34.78.112",               # Iyzico sandbox dummy
+                "ip": "85.34.78.112",
             },
             "shippingAddress": {
                 "contactName": f"{getattr(current_user, 'name', 'Ad')} {getattr(current_user, 'surname', 'Soyad')}",
@@ -153,29 +156,27 @@ def initiate_checkout(
         }
 
         try:
-            result_raw = iyzipay.CheckoutFormInitialize().create(request_body, options)
-            result = json.loads(result_raw.read().decode("utf-8"))
+            result = client.checkout_form_initialize(request_body)
+        except IyzicoError as exc:
+            logger.warning("Iyzico error [%s]: %s", exc.error_code, exc.error_message)
+            if exc.error_code == "1001":
+                detail = (
+                    "Iyzico sandbox hesabınız henüz ödeme işlemleri için aktif edilmemiş "
+                    "(hata 1001). Lütfen sandbox-merchant.iyzipay.com üzerinden başvuru "
+                    "durumunuzu kontrol edin veya entegrasyon@iyzico.com ile iletişime geçin."
+                )
+            else:
+                detail = f"Ödeme formu başlatılamadı: {exc.error_message}"
+            raise HTTPException(status.HTTP_402_PAYMENT_REQUIRED, detail=detail)
         except Exception as exc:
+            logger.exception("Iyzico connection error")
             raise HTTPException(
                 status.HTTP_502_BAD_GATEWAY,
                 detail=f"Ödeme servisi ile bağlantı kurulamadı: {exc}",
             )
 
-        if result.get("status") != "success":
-            error_code = result.get("errorCode", "")
-            error_msg = result.get("errorMessage", "Ödeme formu başlatılamadı.")
-            # Error 1001: merchant not found — API keys are not registered with Iyzico
-            if error_code == "1001":
-                error_msg = (
-                    "Iyzico sandbox hesabınız bulunamadı (hata 1001). "
-                    "Lütfen merchant.iyzipay.com üzerinden sandbox hesabı oluşturup "
-                    "gerçek API anahtarlarınızı .env dosyasına ekleyin. "
-                    "Test için IYZICO_API_KEY değerini boş bırakarak mock modu kullanabilirsiniz."
-                )
-            raise HTTPException(status.HTTP_402_PAYMENT_REQUIRED, detail=error_msg)
-
         token = result["token"]
-        checkout_form_content = result["checkoutFormContent"]
+        checkout_form_content = result.get("checkoutFormContent")
 
     # Persist pending session so callback can look up user + plan
     db.add(PendingCheckout(token=token, user_id=current_user.user_id, plan_name=payload.plan_name))
@@ -221,21 +222,24 @@ async def payment_callback(
     payment_id = f"MOCK-{uuid4().hex[:10].upper()}"
 
     if settings.IYZICO_API_KEY:
-        import iyzipay  # type: ignore[import]
-
-        options = {
-            "api_key": settings.IYZICO_API_KEY,
-            "secret_key": settings.IYZICO_SECRET_KEY,
-            "base_url": settings.IYZICO_BASE_URL
-        }
+        client = IyzicoClient(
+            api_key=settings.IYZICO_API_KEY,
+            secret_key=settings.IYZICO_SECRET_KEY,
+            base_url=settings.IYZICO_BASE_URL,
+        )
 
         try:
-            result_raw = iyzipay.CheckoutForm().retrieve(
-                {"locale": "tr", "conversationId": str(uuid4()), "token": token},
-                options,
+            result = client.checkout_form_retrieve(token)
+        except IyzicoError as exc:
+            logger.warning("Iyzico callback verify error [%s]: %s", exc.error_code, exc.error_message)
+            db.delete(pending)
+            db.commit()
+            return RedirectResponse(
+                f"{frontend_base}/subscription?payment=failed&reason=verification_error",
+                status_code=302,
             )
-            result = json.loads(result_raw.read().decode("utf-8"))
         except Exception:
+            logger.exception("Iyzico connection error during callback")
             db.delete(pending)
             db.commit()
             return RedirectResponse(
