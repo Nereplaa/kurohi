@@ -13,11 +13,14 @@ import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { formatDuration } from "@/lib/utils";
+import { VideoPlayer } from "@/components/VideoPlayer";
 import {
   fetchEpisodeById, fetchEpisodeVideos, formatAiredDate,
   type JikanEpisode, type JikanEpisodeVideo,
 } from "@/lib/jikan";
 import type { Episode, Anime } from "@/types";
+
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 const PLACEHOLDER_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
@@ -220,11 +223,30 @@ export default function WatchPage() {
 
   // Determine actual video source:
   // 1. Use episode.video_url if it's NOT a placeholder
+  //    - If it looks like a bare filename (no protocol, no leading /), it's a local
+  //      file served by our stream endpoint → build the full URL with JWT token
   // 2. Use jikanVideo.url if Jikan promo found
   // 3. No video available
   const useJikan = isPlaceholder(episode.video_url);
-  const videoSource = useJikan ? (jikanVideo?.url ?? null) : episode.video_url;
-  const youtubeEmbed = videoSource ? getYouTubeEmbedUrl(videoSource) : null;
+
+  let videoSource: string | null = null;
+  let isLocalStream = false;
+
+  if (!useJikan && episode.video_url) {
+    const v = episode.video_url;
+    if (!v.startsWith("http://") && !v.startsWith("https://") && !v.startsWith("/")) {
+      // Bare filename → served by /stream endpoint
+      const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+      videoSource = `${BASE}/api/episodes/${epId}/stream${token ? `?token=${encodeURIComponent(token)}` : ""}`;
+      isLocalStream = true;
+    } else {
+      videoSource = v;
+    }
+  } else if (useJikan) {
+    videoSource = jikanVideo?.url ?? null;
+  }
+
+  const youtubeEmbed = videoSource && !isLocalStream ? getYouTubeEmbedUrl(videoSource) : null;
   const isYoutube = Boolean(youtubeEmbed);
 
   // Merged episode info: prefer Jikan data when available
@@ -241,15 +263,37 @@ export default function WatchPage() {
       </Link>
 
       {/* Video Player */}
-      <div className="relative bg-black rounded-2xl overflow-hidden border border-border group">
+      <div className="rounded-2xl overflow-hidden border border-border">
         {jikanLoading && useJikan ? (
-          /* Loading Jikan data */
           <div className="w-full aspect-video flex flex-col items-center justify-center bg-midnight gap-3">
             <Loader2 className="w-10 h-10 text-[#6C5CE7] animate-spin" />
             <p className="text-muted text-sm">Jikan'dan bölüm verisi yükleniyor...</p>
           </div>
+        ) : isLocalStream && videoSource ? (
+          /* ── Premium custom player for local stream files ── */
+          <VideoPlayer
+            src={videoSource}
+            animeTitle={anime?.title ?? ""}
+            episodeNumber={episode.episode_number}
+            episodeTitle={displayTitle !== `Bolum ${episode.episode_number}` ? displayTitle : null}
+            introStart={0}
+            introEnd={90}
+            onEnded={() => { setPlaying(false); saveProgress(); }}
+            onProgress={async (time, isCompleted) => {
+              try {
+                await episodeApi.updateProgress(epId, {
+                  watched_duration: time,
+                  completed_flag: isCompleted,
+                });
+                if (isCompleted && !completed) {
+                  setCompleted(true);
+                  toast.success("Bölüm tamamlandı!");
+                }
+              } catch { /* silently fail */ }
+            }}
+          />
         ) : youtubeEmbed ? (
-          /* YouTube embed — real episode promo or non-placeholder source */
+          /* YouTube embed */
           <div className="w-full aspect-video">
             <iframe
               src={youtubeEmbed}
@@ -260,57 +304,14 @@ export default function WatchPage() {
             />
           </div>
         ) : videoSource && !isYoutube ? (
-          /* Native video file */
-          <>
-            <video
-              ref={videoRef}
-              src={videoSource}
-              className="w-full aspect-video"
-              onTimeUpdate={() => videoRef.current && setCurrentTime(videoRef.current.currentTime)}
-              onLoadedMetadata={() => videoRef.current && setDuration(videoRef.current.duration)}
-              onEnded={() => { setPlaying(false); saveProgress(); }}
-              onPlay={() => setPlaying(true)}
-              onPause={() => setPlaying(false)}
-            />
-            {/* Controls Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-              <input
-                type="range"
-                min={0}
-                max={duration || 0}
-                value={currentTime}
-                onChange={handleSeekBar}
-                className="w-full h-1 mb-3 accent-crimson cursor-pointer"
-              />
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <button onClick={() => seek(-10)} className="p-1.5 text-white/70 hover:text-white transition-colors">
-                    <SkipBack className="w-4 h-4" />
-                  </button>
-                  <button onClick={togglePlay} className="p-2 bg-crimson rounded-full text-white hover:bg-red-600 transition-colors">
-                    {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  </button>
-                  <button onClick={() => seek(10)} className="p-1.5 text-white/70 hover:text-white transition-colors">
-                    <SkipForward className="w-4 h-4" />
-                  </button>
-                  <button onClick={toggleMute} className="p-1.5 text-white/70 hover:text-white transition-colors">
-                    {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                  </button>
-                  <span className="text-xs text-white/60 ml-1">
-                    {formatDuration(Math.floor(currentTime))} / {formatDuration(Math.floor(duration))}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {completed && <CheckCircle className="w-4 h-4 text-green-400" />}
-                  <button onClick={toggleFullscreen} className="p-1.5 text-white/70 hover:text-white transition-colors">
-                    <Maximize className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </>
+          /* External video URL with basic controls */
+          <video
+            src={videoSource}
+            className="w-full aspect-video bg-black"
+            controls
+          />
         ) : (
-          /* No video — show Jikan episode info card */
+          /* No video */
           <div className="w-full aspect-video flex items-center justify-center bg-midnight">
             <div className="text-center space-y-4 max-w-sm px-6">
               <Film className="w-16 h-16 text-dim mx-auto" />
@@ -328,18 +329,10 @@ export default function WatchPage() {
                         {jikanEpisode.score.toFixed(2)}
                       </span>
                     )}
-                    {jikanEpisode.filler && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Filler</span>
-                    )}
-                    {jikanEpisode.recap && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">Recap</span>
-                    )}
                   </div>
                 )}
               </div>
-              <p className="text-dim text-xs">
-                Bu bölüm için video kaynağı mevcut değil.
-              </p>
+              <p className="text-dim text-xs">Bu bölüm için video kaynağı mevcut değil.</p>
             </div>
           </div>
         )}

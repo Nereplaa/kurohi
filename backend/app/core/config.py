@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     # NOTE: iyzipay SDK uses HTTPSConnection which expects bare hostname (no https://)
     IYZICO_BASE_URL: str = "sandbox-api.iyzipay.com"
 
+    # Local video streaming — absolute path to the folder containing .mp4/.mkv files
+    # Example (Windows): C:/Users/YourName/Videos/anime
+    # Example (Linux):   /home/yourname/videos/anime
+    # Leave empty to disable the /stream endpoint.
+    VIDEO_DIR: str = ""
+
     # URLs used in payment callback redirect
     # Set CALLBACK_URL to wherever /api/payments/callback is reachable by Iyzico's servers
     # (for local dev with Iyzico: use ngrok/cloudflare tunnel and set this to the tunnel URL)

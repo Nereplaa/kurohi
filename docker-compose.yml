@@ -31,6 +31,9 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      VIDEO_DIR: /app/videos
+    volumes:
+      - C:/Users/Alperen/Desktop/animeler:/app/videos:ro
     depends_on:
       db:
         condition: service_healthy
